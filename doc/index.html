@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<html>
+
+<body>
+<h1>RDFa Templating</h1>
+
+<h2>Introduction</h2>
+
+<p>
+RDFa is a W3C Recommendation for embedding RDF in XHTML. Since a RDF
+graph is expressed in the WHERE clause of SPARQL Query (with
+additional syntax), the RDF graph embedded in RDFa can be used in the
+WHERE clause. Also, since RDF and RDFa alike can contain an XML
+Literal, which is a balanced XML fragment.
+</p>
+<p>
+This makes it possibly to legally encode XML fragments into the RDF
+model, that can represent variables, which again can be transformed to
+SPARQL variables. Thus, by parsing the XHTML, the RDF model can be
+built. By parsing any XML Literals of a specified namespace, special
+constructs, such as SPARQL variables, can be found.
+</p>
+<p>
+Additionally, the document will be divided into parts by wrapping the
+part in a <code>graph</code> element. Each section is an RDF graph,
+which is identified by a <code>xml:id</code> attribute. Configuration
+information can be supplied as attributes to the <code>graph</code>
+element. A processor will also use the <code>xml:id</code> attribute
+to name this graph.
+ 
+</p>
+<p>
+Two modes of operation is imagined:
+</p>
+<ol>
+  <li>The RDF graph is used to create the WHERE clause of a SPARQL
+  query. XML Literals are parsed to find the SPARQL variables as well
+  as other constructs, such as FILTERs. Configuration information,
+  such as the URL of a SPARQL Endpoint is retrieved from the
+  <code>graph</code> element. The query is then executed and variables
+  are populated by iterating over the results.</li>
+  <li>The RDFa Template is used in a Model-View-Controller paradigm. The RDF model is submitted to a Controller, 
+
+
+
+
+</p>
+<p>
+
+
+
+
+&lt;?xml version="1.0"?>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
+      xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xml:lang="en">
+  &lt;head>
+  &lt;/head>
+  &lt;body>
+    &lt;rat:query xml:id="query1" endpoint="http://dbpedia.org/sparql">
+      &lt;div about="sub:resource">
+	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
+	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:desc"/>&lt;/div>
+      &lt;/div>
+    &lt;/rat:query>
+  &lt;/body>
+&lt;/html>
