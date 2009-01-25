@@ -7,18 +7,18 @@
 <h2>Introduction</h2>
 
 <p>
-RDFa is a W3C Recommendation for embedding RDF in XHTML. Since a RDF
-graph is expressed in the WHERE clause of SPARQL Query (with
-additional syntax), the RDF graph embedded in RDFa can be used in the
-WHERE clause. Also, since RDF and RDFa alike can contain an XML
-Literal, which is a balanced XML fragment.
+RDFa is a W3C Recommendation for embedding RDF in XHTML.  Since RDF
+represents structured data, the RDF model is useful as input to a
+backend applications, to control the application. To turn this into a
+templating language, only variables are needed. We therefore note that
+RDF and RDFa alike can contain an XML Literal, which is a balanced XML
+fragment.
 </p>
 <p>
 This makes it possibly to legally encode XML fragments into the RDF
-model, that can represent variables, which again can be transformed to
-SPARQL variables. Thus, by parsing the XHTML, the RDF model can be
-built. By parsing any XML Literals of a specified namespace, special
-constructs, such as SPARQL variables, can be found.
+model, that can represent e.g. variables. Thus, by parsing the XHTML,
+the RDF model can be built. By parsing any XML Literals of a specified
+namespace, special constructs, such as SPARQL variables, can be found.
 </p>
 <p>
 Additionally, the document will be divided into parts by wrapping the
@@ -39,34 +39,72 @@ Two modes of operation is imagined:
   such as the URL of a SPARQL Endpoint is retrieved from the
   <code>graph</code> element. The query is then executed and variables
   are populated by iterating over the results.</li>
-  <li>The RDFa Template is used in a Model-View-Controller paradigm. The RDF model is submitted to a Controller, 
+  <li>The RDFa Template is used in a Model-View-Controller paradigm
+  framework. The RDF model is submitted to a Controller, which is free
+  to process it as it sees fit, and the corresponding View should
+  return the variables that the template asks for.</li>
+</ol>
 
-
-
-
-</p>
+<h2>Example</h2>
 <p>
 
 
-
-
+The concept can be best explained by example. Consider the following XHTML+RDFa document:
+</p>
+<p>
+<code>
 &lt;?xml version="1.0"?>
 &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
-      xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions"
+      xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions#"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xml:lang="en">
   &lt;head>
   &lt;/head>
   &lt;body>
-    &lt;rat:query xml:id="query1" endpoint="http://dbpedia.org/sparql">
+    &lt;rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
       &lt;div about="sub:resource">
 	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
 	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:desc"/>&lt;/div>
       &lt;/div>
-    &lt;/rat:query>
+    &lt;/rat:graph>
   &lt;/body>
 &lt;/html>
+</code>
+</p>
+
+<p>
+Let us walk through the example: It first defines the needed namespace
+prefixes, and sets the document language. Two namespaces are defined
+for use by RDFa Templates: Here, the namespace assigned to the
+<code>rat:</code>-prefix is used for the XML elements and attributes
+used inline in the XHTML document, whereas <code>sub:</code> is used
+to prefix the document author's variables, so that each variable is
+denoted by a URI.  The <code>head</code> element is irrelevant to the
+example and therefore left empty for brevity.
+</p>
+
+<p>
+The <code>rat:graph</code> element delimits a named graph. It can be
+understood as a unit that may result in a single query in the first
+usage scenario above. Let us in the following consider only this case,
+the processing in the second usage scenario is very much up to the
+backend.
+</p>
+
+<p>
+The <code>xml:id</code> attribute causes a named graph to be created, 
+
+
+<h2>Weaknesses</h2>
+
+<p>
+Currently, all variables are denoted by a specified namespace URI. This causes that the same URI is used in different applications for different variables. Some way for application authors to choose this prefix, et retain portability should be found.
+</p>
+
+
+</body>
+</html>
