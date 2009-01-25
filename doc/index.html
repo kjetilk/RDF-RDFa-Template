@@ -96,8 +96,21 @@ backend.
 </p>
 
 <p>
-The <code>xml:id</code> attribute causes a named graph to be created, 
-
+The <code>xml:id</code> attribute causes a named graph to be created,
+using the base URI of the document and the attribute content as a
+fragment identifier. All triples that has a predicate within this
+element will be added to this graph.
+</p>
+<p>
+The element then has an optional <code>endpoint</code> attribute,
+which contains the URL of the SPARQL endpoint that the query that
+stems from the triples of that particular graph will be run against.
+</p>
+<p>
+Finally, the triples that make out the query. This examples says "give
+me the URI and the <code>rdfs:comment</code> where the
+<code>rdfs:label</code> is 'Resource Description Framework' written in English".
+</p>
 
 <h2>Weaknesses</h2>
 
