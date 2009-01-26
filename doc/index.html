@@ -1,16 +1,34 @@
 <?xml version="1.0"?>
-<html>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>A RDFa-based Templating Language proposal</title>
+  </head>
+
 
 <body>
 <h1>RDFa Templating</h1>
+
+<div class="byline">Kjetil Kjernsmo &lt;kjetil@kjernsmo.net></div>
+
+<h2>Status of this document</h2>
+
+<p>
+This is at present a braindump of an idea I had to extend RDFa to use
+as a templating language for building web pages. It is not by any
+means finished or implemented, but it is a starting point for further
+discussion as to how such a thing should work.
+</p>
 
 <h2>Introduction</h2>
 
 <p>
 RDFa is a W3C Recommendation for embedding RDF in XHTML.  Since RDF
 represents structured data, the RDF model is useful as input to a
-backend applications, to control the application. To turn this into a
-templating language, only variables are needed. We therefore note that
+backend application to control the it. To turn this into a
+templating language, only variables are needed. We note that
 RDF and RDFa alike can contain an XML Literal, which is a balanced XML
 fragment.
 </p>
@@ -49,7 +67,8 @@ Two modes of operation is envisioned:
 <p>
 
 
-The concept can be best explained by example. Consider the following XHTML+RDFa document:
+The concept can be best explained by example. Consider the following
+extended XHTML+RDFa document:
 </p>
 
 <pre>
@@ -65,7 +84,7 @@ The concept can be best explained by example. Consider the following XHTML+RDFa 
   &lt;/head>
   &lt;body>
     &lt;rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
-      &lt;div about="sub:resource">
+      &lt;div about="{sub:resource}">
 	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
 	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:comment"/>&lt;/div>
       &lt;/div>
@@ -133,7 +152,7 @@ query. Then, the two variables declared in the
 clause. 
 </p>
 <p>
-Then, we note that in the original file "<code>sub:resource</code>"
+Then, we note that in the original file "<code>{sub:resource}</code>"
 was the subject set by the <code>about</code> attribute, and this has
 resulted in the <code>?resource</code> variable being the subject in
 the SPARQL WHERE clause. The two <code>property</code> attributes sets
@@ -175,7 +194,10 @@ views.
 <h2>Weaknesses</h2>
 
 <p>
-Currently, all variables are denoted by a specified namespace URI. This causes that the same URI is used in different applications for different variables. Some way for application authors to choose this prefix, et retain portability should be found.
+Currently, all variables are denoted by a specified namespace
+URI. This causes that the same URI is used in different applications
+for different variables. Some way for application authors to choose
+this prefix, yet retain portability should be found.
 </p>
 
 <h2>TODO</h2>
@@ -189,6 +211,14 @@ important.</li>
 <li>Other ways to assign graph names?</li>
 
 </ul>
+
+<h2>Acknowledgements</h2>
+
+<p>
+First and foremost a thank-you to Toby Inkster for writing the
+RDF::RDFa::Parser, and for several suggestions in the early thinking
+around this idea.
+</p>
 
 </body>
 </html>

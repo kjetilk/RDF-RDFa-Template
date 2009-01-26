@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-RDF::RDFa::Template - The great new RDF::RDFa::Template!
+RDF::RDFa::Template - A simple templating system using RDFa to build RDF data views
 
 =head1 VERSION
 
@@ -18,6 +18,8 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
+This module takes an RDFa Template document, and parses it. Then it 
+
 Quick summary of what the module does.
 
 Perhaps a little code snippet.
@@ -27,26 +29,10 @@ Perhaps a little code snippet.
     my $foo = RDF::RDFa::Template->new();
     ...
 
-=head1 EXPORT
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head1 METHODS
 
-=head1 FUNCTIONS
 
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
 
 =head1 AUTHOR
 
@@ -96,7 +82,7 @@ L<http://search.cpan.org/dist/RDF-RDFa-Template/>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Kjetil Kjernsmo, all rights reserved.
+Copyright 2009 Kjetil Kjernsmo.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
