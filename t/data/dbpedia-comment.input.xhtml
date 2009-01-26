@@ -4,17 +4,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
       xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions"
-      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xml:lang="en">
+      xml:lang="en">
   <head>
   </head>
   <body>
-    <rat:query xml:id="query1" endpoint="http://dbpedia.org/sparql">
+    <rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
       <div about="sub:resource">
 	<div property="rdfs:label">Resource Description Framework</div>
-	<div property="rdfs:comment" datatype="rdf:XMLLiteral"><rat:variable name="sub:desc"/></div>
+	<div property="rdfs:comment" datatype="rdf:XMLLiteral"><rat:variable name="sub:comment"/></div>
       </div>
-    </rat:query>
+    </rat:graph>
   </body>
 </html>

@@ -30,7 +30,7 @@ to name this graph.
  
 </p>
 <p>
-Two modes of operation is imagined:
+Two modes of operation is envisioned:
 </p>
 <ol>
   <li>The RDF graph is used to create the WHERE clause of a SPARQL
@@ -51,30 +51,29 @@ Two modes of operation is imagined:
 
 The concept can be best explained by example. Consider the following XHTML+RDFa document:
 </p>
-<p>
-<code>
+
+<pre>
 &lt;?xml version="1.0"?>
 &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
       xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions#"
-      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xml:lang="en">
+      xml:lang="en">
   &lt;head>
   &lt;/head>
   &lt;body>
     &lt;rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
       &lt;div about="sub:resource">
 	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
-	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:desc"/>&lt;/div>
+	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:comment"/>&lt;/div>
       &lt;/div>
     &lt;/rat:graph>
   &lt;/body>
 &lt;/html>
-</code>
-</p>
+</pre>
+
 
 <p>
 Let us walk through the example: It first defines the needed namespace
@@ -111,6 +110,67 @@ Finally, the triples that make out the query. This examples says "give
 me the URI and the <code>rdfs:comment</code> where the
 <code>rdfs:label</code> is 'Resource Description Framework' written in English".
 </p>
+<p>
+Specifically, this SPARQL query will be generated:
+</p>
+<pre>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?resource ?comment 
+WHERE {
+	?resource rdfs:label "Resource Description Framework"@en ;
+		  rdfs:comment ?comment . 
+}
+</pre>
+
+<p>
+Lets look more carefully into what happened here: First, the namespace
+declarations of the original document were added to the query, except
+the XHTML namespace and the two RDFa Template-specific namespaces,
+since they are known to not influence the generation of the
+query. Then, the two variables declared in the
+<code>sub:</code>-prefixed namespace were added to the SELECT
+clause. 
+</p>
+<p>
+Then, we note that in the original file "<code>sub:resource</code>"
+was the subject set by the <code>about</code> attribute, and this has
+resulted in the <code>?resource</code> variable being the subject in
+the SPARQL WHERE clause. The two <code>property</code> attributes sets
+the predicates. The object of the "<code>rdfs:label</code>" predicate
+is a plain literal. Plain literals are used to set the object to a
+specified value to be searched for. 
+</p>
+<p>
+An XML Literal, when in the <code>rat:</code>-prefixed namespace, has
+a special meaning. In this case, we see that the
+<code>rat:variable</code> element is used to create the
+<code>?comment</code> variable, which appears in the object of
+<code>rdfs:comment</code>.
+</p>
+
+
+<h2>Scope</h2>
+<p>
+The scope of RDFa Templates is an open question. The author currently
+feels that only issues relevant to RDF and SPARQL is the scope of RDFa
+Templates. There are many well established and widespread templating
+languages for writing web pages, e.g. in PHP, Template Toolkit,
+etc. Also, for advanced transforms, XSLT is a useful and widespread
+tool. XSLT is ill suited for working on RDF graphs, so RDFa Templates
+and XSLT is a complement to each other. 
+</p>
+<p>
+Therefore, the author envisions RDFa Templates as a part of a greater
+system that employs several techniques to build web pages. One may for
+example use Template Toolkit to build the page, insert query
+variables, etc., and then use RDFa Templates to populate the page with
+data from a backend.
+</p>
+<p>
+This is, as stated, and open question, and the author is open to other
+views.
+</p>
 
 <h2>Weaknesses</h2>
 
@@ -118,6 +178,17 @@ me the URI and the <code>rdfs:comment</code> where the
 Currently, all variables are denoted by a specified namespace URI. This causes that the same URI is used in different applications for different variables. Some way for application authors to choose this prefix, et retain portability should be found.
 </p>
 
+<h2>TODO</h2>
+<ul>
+<li>Resolve weaknesses, or decide that they are really not
+important.</li>
+<li>How will URIs appear in objects?</li>
+<li>How to use FILTERs?</li>
+<li>How to use freetext index matching?</li>
+<li>How to create SPARQL UNIONs and OPTIONALs?</li>
+<li>Other ways to assign graph names?</li>
+
+</ul>
 
 </body>
 </html>

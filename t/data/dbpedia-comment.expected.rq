@@ -1,0 +1,7 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?resource ?comment 
+WHERE {
+	?resource rdfs:label "Resource Description Framework"@en ;
+		  rdfs:comment ?comment . 
+}
