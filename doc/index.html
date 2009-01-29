@@ -26,17 +26,21 @@ discussion as to how such a thing should work.
 
 <p>
 RDFa is a W3C Recommendation for embedding RDF in XHTML.  Since RDF
-represents structured data, the RDF model is useful as input to a
-backend application to control it. To turn this into a
-templating language, only variables are needed. We note that
-RDF and RDFa alike can contain an XML Literal, which is a balanced XML
-fragment.
+represents structured data, we can utilise it to represent both
+invariant data and variables. The invariant data can be used to
+control a backend web application, and also to identify data to be
+retrieved. To fill a template, the variables could be populated by the
+application.
 </p>
 <p>
-This makes it possibly to legally encode XML fragments into the RDF
-model, that can represent e.g. variables. Thus, by parsing the XHTML,
-the RDF model can be built. By parsing any XML Literals of a specified
-namespace, special constructs, such as SPARQL variables, can be found.
+We note that RDF and RDFa alike can contain an XML Literal, which is a
+balanced XML fragment. This makes it possibly to legally encode XML
+fragments into the RDF model, that can represent e.g. variables. Thus,
+by parsing the XHTML, the RDF model can be built. By parsing any XML
+Literals of a specified namespace, special constructs, such as SPARQL
+variables, can be found.  There is therefore a design goal of RDFa
+Templates that it should be parseable with standard XML, RDFa and RDF
+tools with very few extensions.
 </p>
 <p>
 Additionally, the document will be divided into parts by wrapping the
