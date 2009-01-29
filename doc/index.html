@@ -25,31 +25,36 @@ discussion as to how such a thing should work.
 <h2>Introduction</h2>
 
 <p>
-RDFa is a W3C Recommendation for embedding RDF in XHTML.  Since RDF
-represents structured data, we can utilise it to represent both
-invariant data and variables. The invariant data can be used to
-control a backend web application. By connecting invariant data and
-variables, data we wish to use to populate a document can be
+<a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a> is a W3C
+Recommendation for embedding <a href="http://www.w3.org/RDF/">RDF</a>
+in XHTML.  Since RDF represents structured data, we can utilise it to
+represent both invariant data and variables. The invariant data can be
+used to control a backend web application. By connecting invariant
+data and variables, data we wish to use to populate a document can be
 retrieved. This is the motivation for a new templating language,
 <em>RDFa&nbsp;Templates</em>.
 </p>
 <p>
-We note that RDF and RDFa alike can contain an XML Literal, which is a
-balanced XML fragment. This makes it possibly to legally encode XML
-fragments into the RDF model, that can represent e.g. variables. Thus,
-by parsing the XHTML, the RDF model can be built. By parsing any XML
-Literals of a specified namespace, special constructs, such as SPARQL
-variables, can be found.  There is therefore a design goal of RDFa
-Templates that it should be parseable with standard XML, RDFa and RDF
-tools with very few extensions.
+We note that RDF and RDFa alike can contain an <a
+href="http://www.w3.org/TR/rdf-concepts/#dfn-rdf-XMLLiteral">XML
+Literal</a>, which is a balanced XML fragment. This makes it possibly
+to legally encode XML fragments into the RDF model, that can represent
+e.g. variables. Thus, by parsing the XHTML, the RDF model can be
+built. By parsing any XML Literals of a specified namespace, special
+constructs, such as <a
+href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> variables,
+can be found.  There is therefore a design goal of RDFa Templates that
+it should be parseable with standard XML, RDFa and RDF tools with very
+few extensions.
 </p>
 <p>
 Additionally, the document will be divided into parts by wrapping the
 part in a <code>graph</code> element. Each section is an RDF graph,
-which is identified by a <code>xml:id</code> attribute. Configuration
-information can be supplied as attributes to the <code>graph</code>
-element. A processor will also use the <code>xml:id</code> attribute
-to name this graph.
+which is identified by a <code><a
+href="http://www.w3.org/TR/xml-id/">xml:id</a></code>
+attribute. Configuration information can be supplied as attributes to
+the <code>graph</code> element. A processor will also use the
+<code>xml:id</code> attribute to name this graph.
  
 </p>
 <p>
@@ -89,7 +94,7 @@ extended XHTML+RDFa document:
   &lt;/head>
   &lt;body>
     &lt;rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
-      &lt;div about="{sub:resource}">
+      &lt;div about="sub:resource">
 	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
 	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:comment"/>&lt;/div>
       &lt;/div>
@@ -157,7 +162,7 @@ query. Then, the two variables declared in the
 clause. 
 </p>
 <p>
-Then, we note that in the original file "<code>{sub:resource}</code>"
+Then, we note that in the original file "<code>sub:resource</code>"
 was the subject set by the <code>about</code> attribute, and this has
 resulted in the <code>?resource</code> variable being the subject in
 the SPARQL WHERE clause. The two <code>property</code> attributes sets
@@ -220,9 +225,9 @@ important.</li>
 <h2>Acknowledgements</h2>
 
 <p>
-First and foremost a thank-you to Toby Inkster for writing the
-RDF::RDFa::Parser, and for several suggestions in the early thinking
-around this idea.
+First and foremost a thank-you to Toby Inkster for writing the <a
+href="http://search.cpan.org/dist/RDF-RDFa-Parser/">RDF::RDFa::Parser</a>,
+and for several suggestions in the early thinking around this idea.
 </p>
 
 </body>
