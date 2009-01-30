@@ -73,7 +73,9 @@ Two modes of operation is envisioned:
   return the variables that the template asks for.</li>
 </ol>
 
-<h2>Example</h2>
+<h2>Examples</h2>
+
+<h3>Retrieve a single record</h3>
 <p>
 
 
@@ -178,16 +180,100 @@ a special meaning. In this case, we see that the
 <code>rdfs:comment</code>.
 </p>
 
+<h3>Retrieve multiple records</h3>
+
+<p>
+Often, you want to retrieve multiple records, and a processor should
+iterate over all query solutions. Consider this example:
+
+</p>
+<pre>
+&lt;?xml version="1.0"?>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
+      xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:dbp="http://dbpedia.org/property/"
+      xmlns:dbo="http://dbpedia.org/ontology/"
+      xml:lang="en">
+  &lt;head>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>Aircraft produced in 1973&lt;/h1>
+    &lt;table>
+      &lt;tr>&lt;th>Name&lt;/th>&lt;th>Produced&lt;/th>&lt;th>First flight&lt;/th>&lt;/tr>
+      &lt;rat:graph xml:id="query2" endpoint="http://dbpedia.org/sparql">
+	&lt;tr about="sub:resource">
+	  &lt;td property="foaf:name" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:name"/>&lt;/td>
+	  &lt;td property="dbo:produced">1973&lt;/td>
+	  &lt;td property="dbp:firstFlight" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:first"/>&lt;/td>
+	&lt;/tr>
+      &lt;/rat:graph>
+    &lt;/table>
+  &lt;/body>
+&lt;/html>
+</pre>
+
+<p>
+In this case, we will get more than one result as the query has more
+than one solution. The processor should in this case iterate over the
+elements in the <code>rat:graph</code> element and insert the values
+for the corresponding row on each iteration, thus producing the
+following XHTML+RDFa:
+</p>
+<pre>
+&lt;?xml version="1.0"?>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:dbp="http://dbpedia.org/property/"
+      xmlns:dbo="http://dbpedia.org/ontology/"
+      xml:lang="en">
+  &lt;head>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>Aircraft produced in 1973&lt;/h1>
+    &lt;table>
+      &lt;tr>&lt;th>Name&lt;/th>&lt;th>Produced&lt;/th>&lt;th>First flight&lt;/th>&lt;/tr>  
+      &lt;tr about="http://dbpedia.org/resource/Dassault/Dornier_Alpha_Jet">
+	&lt;td property="foaf:name">Alpha Jet&lt;/td>
+	&lt;td property="dbo:produced">1973&lt;/td>
+	&lt;td property="dbp:firstFlight">1973-10-26&lt;/td>
+      &lt;/tr>
+      &lt;tr about="http://dbpedia.org/resource/Piper_PA-36_Pawnee_Brave">
+	&lt;td property="foaf:name">PA-36 Pawnee Brave&lt;/td>
+	&lt;td property="dbo:produced">1973&lt;/td>
+	&lt;td property="dbp:firstFlight">1969&lt;/td>
+      &lt;/tr>    
+    &lt;/table>
+  &lt;/body>
+&lt;/html>
+</pre>
+
+<p>
+We saw that by having an invariant property <code>dbo:produced</code>,
+a <a href="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;should-sponge=&amp;query=PREFIX+foaf%3A+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%3E%0D%0APREFIX+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0APREFIX+dbp%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fproperty%2F%3E%0D%0ASELECT+%3Fresource+%3Fname+%3Ffirst+WHERE+%0D%0A%7B%0D%0A%3Fresource+dbo%3Aproduced+%221973%22+.%0D%0A%3Fresource+foaf%3Aname+%3Fname+.%0D%0A%3Fresource+dbp%3AfirstFlight+%3Ffirst+.%0D%0A%7D&amp;format=text%2Fhtml&amp;debug=on">SPARQL query</a> was generated where this literal resulted in a query
+that would find everything first produced in 1973 (apparently, this
+property is only used for aircraft in DBPedia). The
+<code>sub:</code>-prefixed URIs in the input example was used to create
+three variables, <code>?resource</code>, <code>?name</code> and
+<code>?first</code>, which was used to populate the template.
+
+</p>
 
 <h2>Scope</h2>
 <p>
 The scope of RDFa Templates is an open question. The author currently
 feels that only issues relevant to RDF and SPARQL is the scope of RDFa
 Templates. There are many well established and widespread templating
-languages for writing web pages, e.g. in PHP, Template Toolkit,
-etc. Also, for advanced transforms, XSLT is a useful and widespread
-tool. XSLT is ill suited for working on RDF graphs, so RDFa Templates
-and XSLT is a complement to each other. 
+languages for writing web pages, e.g. in PHP, <a
+href="http://template-toolkit.org/">Template Toolkit</a>, etc. Also,
+for advanced transforms, <a href="http://www.w3.org/TR/xslt">XSLT</a>
+is a useful and widespread tool. XSLT is ill suited for working on RDF
+graphs, so RDFa Templates and XSLT is a complement to each other.
 </p>
 <p>
 Therefore, the author envisions RDFa Templates as a part of a greater
