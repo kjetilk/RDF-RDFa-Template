@@ -130,7 +130,9 @@ backend.
 The <code>xml:id</code> attribute causes a named graph to be created,
 using the base URI of the document and the attribute content as a
 fragment identifier. All triples that has a predicate within this
-element will be added to this graph.
+element will be added to this graph. It is important to understand the
+the named graph is used to refer to the graph in the context of the
+document, but it is not necessarily used in any generated SPARQL query.
 </p>
 <p>
 The element then has an optional <code>endpoint</code> attribute,
