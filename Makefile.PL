@@ -5,9 +5,13 @@ all_from 'lib/RDF/RDFa/Template.pm';
 author   'Kjetil Kjernsmo <kjetilk@cpan.org>';
 license  'perl';
 
-build_requires 'Test::More';
+test_requires 'Test::More';
+
+sign;
 
 auto_install;
+
+
 
 WriteAll;
 
