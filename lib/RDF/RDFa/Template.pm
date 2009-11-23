@@ -13,21 +13,14 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.01_01';
 
 
 =head1 SYNOPSIS
 
-This module takes an RDFa Template document, and parses it. Then it 
+This module takes an RDFa Template document, and parses it. Then it
+builds something that you can use to run queries.
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use RDF::RDFa::Template;
-
-    my $foo = RDF::RDFa::Template->new();
-    ...
 
 
 =head1 METHODS
