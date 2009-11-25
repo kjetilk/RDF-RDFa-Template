@@ -9,6 +9,7 @@ RDF::RDFa::Template::Document - A parsed Template document
 
 =cut
 
+use RDF::RDFa::Template::Unit;
 use RDF::RDFa::Parser;
 use RDF::Trine::Model;
 use RDF::Trine::Statement;
@@ -34,17 +35,26 @@ sub new {
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;
   my $doc = RDF::RDFa::Template::Document->($parser);
-
+  $doc->extract;
 
 =head1 METHODS
 
-This module inherits all methods of its superclass, including a constructor which is reimplemented with an identical interface. In addition, it implements the following methods:
+This module inherits all methods of its superclass, including a
+constructor which is reimplemented with an identical interface. In
+addition, it implements the following methods:
 
 =over
+
+=item $doc->extract
+
+Extracts the Basic Graph Patterns from the parsed document. Returns
+the number of patterns extracted.
 
 =item $doc->unit( $graph_name )
 
 Returns a RDF::RDFa::Template::Unit for the specified graph name.
+
+
 
 =cut
 
@@ -52,6 +62,7 @@ sub extract {
   my $self = shift;
   my $dom = $self->{PARSED}->dom;
   my $return = 0;
+  my %units;
   my %graphs = %{$self->{PARSED}->graphs};
   while (my ($graph, $model) = each(%graphs)) {
     next if ($graph eq '_:RDFaDefaultGraph'); # We don't need the default graph
@@ -78,14 +89,22 @@ sub extract {
 						    $statement->predicate,
 						    $object);
       push(@triples, $newstatement);
-      warn $graph;
     }
-    $self->{UNITS}->{$graph} = RDF::Trine::Pattern->new(@triples);
-
-    $return = 1;
+    $return++;
+    $units{$graph} = RDF::RDFa::Template::Unit->new(
+			      triples => \@triples,
+			      endpoint => $nodes->shift->attributes->getNamedItem('endpoint')->getValue,
+			      doc_graph	=> $graph);
+    $self->{UNITS} = \%units;
   }
   return $return;
 }
+
+sub unit {
+  my ($self, $graph_name) = @_;
+  return $self->{UNITS}->{$graph_name};
+}
+
 
 
 =head1 AUTHOR

@@ -9,11 +9,13 @@ RDF::RDFa::Template::Unit - An individual graph pattern of an RDFa Template
 
 =cut
 
-use RDF::RDFa::Parser::Trine;
+
 use RDF::Trine::Pattern;
 
 sub new {
   my ($class, %args) = @_;
+  use Data::Dumper;
+ # die Dumper(\%args);
   my $self = {
 	      PATTERN => RDF::Trine::Pattern->new(@{$args{triples}}),
 	      ENDPOINT => $args{endpoint},
@@ -31,7 +33,7 @@ This class holds an individual graph pattern of an RDFa Template. This
 has several elements, a Basic Graph Pattern, a query endpoint and a
 graph name from the RDFa document.
 
-  $doc = RDF::RDFa::Template::Unit->new(triples => @triples,
+  $doc = RDF::RDFa::Template::Unit->new(triples => \@triples,
                                         endpoint => 'http://dbpedia.org/sparql',
                                         doc_graph => 'http://example.org/graph'
 
@@ -44,7 +46,7 @@ graph name from the RDFa document.
 
 sub pattern {
   my $self = shift;
-  $return $self->{PATTERN};
+  return $self->{PATTERN};
 }
 
 sub endpoint {
