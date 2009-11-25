@@ -16,12 +16,15 @@ use RDF::Trine::Statement;
 use RDF::Trine::Node::Variable;
 use RDF::Trine::Pattern;
 use Data::Dumper;
+use Carp;
 
 sub new {
   my $class = shift;
   my $self  = {
 	       PARSED => shift,
 	       UNITS  => {},
+	       SUBURI => 'http://www.kjetil.kjernsmo.net/software/rat/substitutions#',
+	       RATURI => 'http://www.kjetil.kjernsmo.net/software/rat/xmlns',
 	      };
   bless ($self, $class);
   return $self;
@@ -74,19 +77,32 @@ sub extract {
     my @triples;
     my $iterator = $model->as_stream;
     while (my $statement = $iterator->next) {
+      # Go through each statement to look for variables
+
+      # First, lets check the object, which needs to be a XMLLiteral to be a variable
       my $object = $statement->object;
       if ($statement->object->isa('RDF::Trine::Node::Literal::XML')) {
 	my $element = $statement->object->xml_element->firstChild; # TODO: Reliable?
 	if ($element->isa('XML::LibXML::Node') 
-	    && ($element->namespaceURI eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns')
+	    && ($element->namespaceURI eq $self->{RATURI})
 	    && ($element->localname eq 'variable')) {
 	  # Now, we know that we have a variable
-	  my $nameattribute = $element->attributes->getNamedItem('name');
-	  $object = RDF::Trine::Node::Variable->new($nameattribute->getValue());
-	} 
+	  my $varname = $element->attributes->getNamedItem('name')->getValue();
+	  if ($varname =~ m/^(\w*):(\w*)$/) {
+	    my $prefix = $1;
+	    my $localname = $2;
+	    if ($dom->firstChild->lookupNamespaceURI($prefix) eq $self->{SUBURI}) {
+	      $object = RDF::Trine::Node::Variable->new($localname);
+	    } else {
+	      carp "No variable found in the " . $element->nodeName . " field. Have you remember the $self->{SUBURI} namespace?";
+	    }
+	  }
+	}
       }
-      my $newstatement = RDF::Trine::Statement->new($statement->subject, 
-						    $statement->predicate,
+
+
+      my $newstatement = RDF::Trine::Statement->new($self->_check_resource($statement->subject), 
+						    $self->_check_resource($statement->predicate),
 						    $object);
       push(@triples, $newstatement);
     }
@@ -105,6 +121,20 @@ sub unit {
   return $self->{UNITS}->{$graph_name};
 }
 
+sub _check_resource {
+  my ($self, $resource) = @_;
+  my $return = $resource;
+  if ($resource->uri_value =~ m/^(\w*):(\w*)$/) {
+    my $prefix = $1;
+    my $localname = $2;
+    if ($self->{PARSED}->dom->firstChild->lookupNamespaceURI( $prefix ) 
+	eq $self->{SUBURI}) {
+      $return = RDF::Trine::Node::Variable->new($localname);
+    }
+  }
+    
+  return $return;
+}
 
 
 =head1 AUTHOR
