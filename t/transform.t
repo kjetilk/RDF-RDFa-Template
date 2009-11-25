@@ -42,10 +42,12 @@ ok($doc->extract, "RDFa templates extracted");
   ok($unit->endpoint eq 'http://dbpedia.org/sparql', "Correct endpoint");
   isa_ok($unit->pattern, 'RDF::Trine::Pattern');
 
-  ok($unit->pattern->sse eq '(bgp (triple <sub:resource> <http://www.w3.org/2000/01/rdf-schema#label> "Resource Description Framework"@en) (triple <sub:resource> <http://www.w3.org/2000/01/rdf-schema#comment> ?comment))', "SSE Matches");
-
 TODO: {
   local $TODO = 'Not implemented';
+
+  ok($unit->pattern->sse eq '(bgp (triple ?resource <http://www.w3.org/2000/01/rdf-schema#label> "Resource Description Framework"@en) (triple ?resource <http://www.w3.org/2000/01/rdf-schema#comment> ?comment))', "SSE Matches");
+
+
 
 
 }
