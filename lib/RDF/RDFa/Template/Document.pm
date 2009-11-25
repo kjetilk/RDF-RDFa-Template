@@ -57,7 +57,9 @@ the number of patterns extracted.
 
 Returns a RDF::RDFa::Template::Unit for the specified graph name.
 
+=item $doc->units
 
+Returns an array of RDF::RDFa::Template::Unit objects
 
 =cut
 
@@ -119,6 +121,11 @@ sub extract {
 sub unit {
   my ($self, $graph_name) = @_;
   return $self->{UNITS}->{$graph_name};
+}
+
+sub units {
+  my $self = shift;
+  return values(%{$self->{UNITS}});
 }
 
 sub _check_resource {
