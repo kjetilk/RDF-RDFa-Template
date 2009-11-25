@@ -33,8 +33,6 @@ isa_ok($doc, 'RDF::RDFa::Template::Document');
 
 ok($doc->extract, "RDFa templates extracted");
 
-TODO: {
-  local $TODO = 'Not implemented';
   
 
   my $unit = $doc->unit('http://example.org/dbpedia-comment/query1');
@@ -43,6 +41,12 @@ TODO: {
 
   ok($unit->endpoint eq 'http://dbpedia.org/sparql', "Correct endpoint");
   isa_ok($unit->pattern, 'RDF::Trine::Pattern');
+
+  print $unit->pattern->sse;
+
+TODO: {
+  local $TODO = 'Not implemented';
+
 
 }
 done_testing();
