@@ -1,7 +1,7 @@
 use Test::More;
 
 use_ok('RDF::RDFa::Template::Document');
-use_ok('RDF::RDFa::Parser::Trine');
+use_ok('RDF::RDFa::Parser');
 use_ok('RDF::Trine');
 use_ok('RDF::Trine::Store');
 
@@ -19,8 +19,8 @@ ok(defined($xhtml), "Got data");
 my $storage = RDF::Trine::Store->temporary_store;
 
 
-my $parser = RDF::RDFa::Parser::Trine->new($storage, $xhtml, 'http://example.org/dbpedia-comment/');
-isa_ok($parser, 'RDF::RDFa::Parser::Trine');
+my $parser = RDF::RDFa::Parser->new($xhtml, 'http://example.org/dbpedia-comment/', {}, $storage);
+isa_ok($parser, 'RDF::RDFa::Parser');
 
 ok($parser->named_graphs('http://example.org/graph#', 'graph'), "Graph named");
 
