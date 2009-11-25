@@ -31,11 +31,10 @@ my $doc = RDF::RDFa::Template::Document->new($parser);
 
 isa_ok($doc, 'RDF::RDFa::Template::Document');
 
+ok($doc->extract, "RDFa templates extracted");
 
 TODO: {
   local $TODO = 'Not implemented';
-
-  ok($doc->extract, "RDFa templates extracted");
   
 
   my $unit = $doc->unit('http://example.org/dbpedia-comment/query1');
