@@ -9,8 +9,12 @@ RDF::RDFa::Template::Document - A parsed Template document
 
 =cut
 
-use RDF::RDFa::Parser::Trine;
+use RDF::RDFa::Parser;
 use RDF::Trine::Model;
+use RDF::Trine::Statement;
+use RDF::Trine::Node::Variable;
+use RDF::Trine::Pattern;
+use Data::Dumper;
 
 sub new {
   my $class = shift;
@@ -26,7 +30,7 @@ sub new {
 =head1 SYNOPSIS
 
   my $storage = RDF::Trine::Store::DBI->temporary_store;
-  my $parser = RDF::RDFa::Parser::Trine->new($storage, $xhtml, 'http://example.com/foo');
+  my $parser = RDF::RDFa::Parser->new($storage, $xhtml, {}, 'http://example.com/foo');
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;
   my $doc = RDF::RDFa::Template::Document->($parser);
@@ -48,11 +52,36 @@ sub extract {
   my $self = shift;
   my $dom = $self->{PARSED}->dom;
   my $return = 0;
-  while (my ($graph, $model) = each(%{$self->{PARSED}->graphs})) {
+  my %graphs = %{$self->{PARSED}->graphs};
+  while (my ($graph, $model) = each(%graphs)) {
     next if ($graph eq '_:RDFaDefaultGraph'); # We don't need the default graph
-    my $nodes = $dom->findnodes('//rat:graph'); #[@g:graph = ' . $self->{PARSED}->named_grap );
 
-    die $nodes->shift->toString;
+    my $baseuri = $self->{PARSED}->uri;
+    my ($local_graph) = $graph =~ m/^$baseuri(.*?)$/;
+    # TODO: Don't hardcode the graph node name or the rat prefix
+    my $nodes = $dom->findnodes('//rat:graph[@g:graph = ' . "'$local_graph']"  ); 
+    my @triples;
+    my $iterator = $model->as_stream;
+    while (my $statement = $iterator->next) {
+      my $object = $statement->object;
+      if ($statement->object->isa('RDF::Trine::Node::Literal::XML')) {
+	my $element = $statement->object->xml_element->firstChild; # TODO: Reliable?
+	if ($element->isa('XML::LibXML::Node') 
+	    && ($element->namespaceURI eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns')
+	    && ($element->localname eq 'variable')) {
+	  # Now, we know that we have a variable
+	  my $nameattribute = $element->attributes->getNamedItem('name');
+	  $object = RDF::Trine::Node::Variable->new($nameattribute->getValue());
+	} 
+      }
+      my $newstatement = RDF::Trine::Statement->new($statement->subject, 
+						    $statement->predicate,
+						    $object);
+      push(@triples, $newstatement);
+      warn $graph;
+    }
+    $self->{UNITS}->{$graph} = RDF::Trine::Pattern->new(@triples);
+
     $return = 1;
   }
   return $return;

@@ -26,7 +26,7 @@ ok($parser->named_graphs('http://example.org/graph#', 'graph'), "Graph named");
 
 ok($parser->consume, "Graph consumed");
 
-die "huh";
+
 my $doc = RDF::RDFa::Template::Document->new($parser);
 
 isa_ok($doc, 'RDF::RDFa::Template::Document');
@@ -37,7 +37,7 @@ TODO: {
 
   ok($doc->extract, "RDFa templates extracted");
   
-  isa_ok($doc->dom, 'XML::LibXML::Document');
+
   my $unit = $doc->unit('http://example.org/dbpedia-comment/query1');
 
   isa_ok($unit, 'RDF::RDFa::Template::Unit');
