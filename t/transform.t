@@ -21,7 +21,7 @@ ok(defined($xhtml), "Got data");
 my $storage = RDF::Trine::Store->temporary_store;
 
 
-my $parser = RDF::RDFa::Parser->new($xhtml, 'http://example.org/dbpedia-comment/', {}, $storage);
+my $parser = RDF::RDFa::Parser->new($xhtml, 'http://example.org/dbpedia-comment/', {use_rtnlx => 1}, $storage);
 isa_ok($parser, 'RDF::RDFa::Parser');
 
 ok($parser->named_graphs('http://example.org/graph#', 'graph'), "Graph named");
