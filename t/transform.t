@@ -1,4 +1,5 @@
 use Test::More;
+use Test::Exception;
 
 use_ok('RDF::RDFa::Template::Document');
 use_ok('RDF::RDFa::Template::SimpleQuery');
@@ -44,6 +45,9 @@ ok($doc->extract, "RDFa templates extracted");
   isa_ok($unit->pattern, 'RDF::Trine::Pattern');
 
   ok($unit->pattern->sse eq '(bgp (triple ?resource <http://www.w3.org/2000/01/rdf-schema#label> "Resource Description Framework"@en) (triple ?resource <http://www.w3.org/2000/01/rdf-schema#comment> ?comment))', "SSE Matches") || diag $unit->pattern->sse;
+  dies_ok{$unit->results('foo')} 'Should croak on string';
+  is_deeply($unit->results, {}, "Returns empty hashref");
+  
 }
 
 foreach my $unit ($doc->units) {
@@ -51,16 +55,6 @@ foreach my $unit ($doc->units) {
 }
 
 
-
-TODO: {
-  local $TODO = 'Not implemented';
-  my $query = RDF::RDFa::Template::SimpleQuery->new($doc);
-  isa_ok($query, 'RDF::RDFa::Template::SimpleQuery');
-  ok($query->execute, "Query executed successfully");
-  my $output = $query->rdfa_xhtml;
-  isa_ok($output, 'XML::LibXML::Document');
-
-}
 
 
 done_testing();

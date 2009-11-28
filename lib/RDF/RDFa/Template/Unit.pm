@@ -3,6 +3,8 @@ package RDF::RDFa::Template::Unit;
 use warnings;
 use strict;
 
+use Carp;
+
 =head1 NAME
 
 RDF::RDFa::Template::Unit - An individual graph pattern of an RDFa Template
@@ -20,6 +22,7 @@ sub new {
 	      PATTERN => RDF::Trine::Pattern->new(@{$args{triples}}),
 	      ENDPOINT => $args{endpoint},
 	      DOC_GRAPH => $args{doc_graph},
+	      ITERATOR => {},
 	     };
 
   bless ($self, $class);
@@ -56,6 +59,22 @@ sub endpoint {
   }
   return $self->{ENDPOINT};
 }
+
+sub results {
+  my ($self, $iterator) = @_;
+  if ($iterator) {
+    if ($iterator->isa('RDF::Trine::Iterator')) {
+      $self->{ITERATOR} = $iterator;
+    } else {
+      croak "Argument is not a RDF::Trine::Iterator";
+    }
+  } else {
+    return $self->{ITERATOR};
+  }
+}
+       
+	
+
 
 =head1 AUTHOR
 
