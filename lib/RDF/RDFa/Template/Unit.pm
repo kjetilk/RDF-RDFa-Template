@@ -12,14 +12,14 @@ RDF::RDFa::Template::Unit - An individual graph pattern of an RDFa Template
 =cut
 
 
-use RDF::Trine::Pattern;
+use RDF::Query::Algebra::BasicGraphPattern;
 
 sub new {
   my ($class, %args) = @_;
   use Data::Dumper;
  # die Dumper(\%args);
   my $self = {
-	      PATTERN => RDF::Trine::Pattern->new(@{$args{triples}}),
+	      PATTERN => RDF::Query::Algebra::BasicGraphPattern->new(@{$args{triples}}),
 	      ENDPOINT => $args{endpoint},
 	      DOC_GRAPH => $args{doc_graph},
 	      ITERATOR => {},

@@ -10,11 +10,10 @@ RDF::RDFa::Template::Document - A parsed Template document
 =cut
 
 use RDF::RDFa::Template::Unit;
-use RDF::RDFa::Parser;
-use RDF::Trine::Model;
-use RDF::Trine::Statement;
-use RDF::Trine::Node::Variable;
-use RDF::Trine::Pattern;
+use RDF::Query::Algebra::BasicGraphPattern;
+use RDF::Query::Algebra::Triple;
+use RDF::Query::Node::Variable;
+
 use Data::Dumper;
 use Carp;
 
@@ -81,7 +80,7 @@ sub extract {
       # Go through each statement to look for variables
 
       # First, lets check the object, which needs to be a XMLLiteral to be a variable
-      my $object = $statement->object;
+      my $object = RDF::Query::Node->from_trine($statement->object); 
       if ($statement->object->isa('RDF::Trine::Node::Literal::XML')) {
 	my $element = $statement->object->xml_element->firstChild; # TODO: Reliable?
 	if ($element->isa('XML::LibXML::Node') 
@@ -93,7 +92,7 @@ sub extract {
 	    my $prefix = $1;
 	    my $localname = $2;
 	    if ($dom->firstChild->lookupNamespaceURI($prefix) eq $self->{SUBURI}) {
-	      $object = RDF::Trine::Node::Variable->new($localname);
+	      $object = RDF::Query::Node::Variable->new($localname);
 	    } else {
 	      carp "No variable found in the " . $element->nodeName . " field. Have you remember the $self->{SUBURI} namespace?";
 	    }
@@ -102,7 +101,7 @@ sub extract {
       }
 
 
-      my $newstatement = RDF::Trine::Statement->new($self->_check_resource($statement->subject), 
+      my $newstatement = RDF::Query::Algebra::Triple->new($self->_check_resource($statement->subject), 
 						    $self->_check_resource($statement->predicate),
 						    $object);
       push(@triples, $newstatement);
@@ -129,13 +128,13 @@ sub units {
 
 sub _check_resource {
   my ($self, $resource) = @_;
-  my $return = $resource;
+  my $return = RDF::Query::Node->from_trine($resource); # Promotes the resource to a Query node
   if ($resource->uri_value =~ m/^(\w*):(\w*)$/) {
     my $prefix = $1;
     my $localname = $2;
     if ($self->{PARSED}->dom->firstChild->lookupNamespaceURI( $prefix ) 
 	eq $self->{SUBURI}) {
-      $return = RDF::Trine::Node::Variable->new($localname);
+      $return = RDF::Query::Node::Variable->new($localname);
     }
   }
     

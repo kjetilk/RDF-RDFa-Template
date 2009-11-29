@@ -39,9 +39,10 @@ ok($doc->extract, "RDFa templates extracted");
   isa_ok($unit, 'RDF::RDFa::Template::Unit');
 
   ok($unit->endpoint eq 'http://dbpedia.org/sparql', "Correct endpoint");
-  isa_ok($unit->pattern, 'RDF::Trine::Pattern');
+  isa_ok($unit->pattern, 'RDF::Query::Algebra::BasicGraphPattern');
 
-  ok($unit->pattern->sse eq '(bgp (triple ?resource <http://www.w3.org/2000/01/rdf-schema#label> "Resource Description Framework"@en) (triple ?resource <http://www.w3.org/2000/01/rdf-schema#comment> ?comment))', "SSE Matches") || diag $unit->pattern->sse;
+  ok($unit->pattern->as_sparql eq '?resource <http://www.w3.org/2000/01/rdf-schema#label> "Resource Description Framework"@en .
+?resource <http://www.w3.org/2000/01/rdf-schema#comment> ?comment .', "SPARQL BGP Matches") || diag $unit->pattern->as_sparql;
   dies_ok{$unit->results('foo')} 'Should croak on string';
   is_deeply($unit->results, {}, "Returns empty hashref");
   
