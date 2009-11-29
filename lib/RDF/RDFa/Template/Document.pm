@@ -33,8 +33,7 @@ sub new {
 
 =head1 SYNOPSIS
 
-  my $storage = RDF::Trine::Store::DBI->temporary_store;
-  my $parser = RDF::RDFa::Parser->new($storage, $xhtml, {}, 'http://example.com/foo');
+  my $parser = RDF::RDFa::Parser->new($xhtml, 'http://example.org/foo/', {use_rtnlx => 1});
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;
   my $doc = RDF::RDFa::Template::Document->($parser);
