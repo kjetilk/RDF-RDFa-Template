@@ -1,4 +1,4 @@
-package RDF::RDFa::Template::Query;
+package RDF::RDFa::Template::SimpleQuery;
 
 use warnings;
 use strict;
@@ -15,14 +15,15 @@ use RDF::Trine::Model;
 use RDF::Trine::Statement;
 use RDF::Trine::Node::Variable;
 use RDF::Trine::Pattern;
+use RDF::RDFa::Parser;
+use RDF::Query::Client;
 use Data::Dumper;
 use Carp;
 
 sub new {
   my $class = shift;
   my $self  = {
-	       RESULTS => (),
-	       DOC => shift,
+	       XHTML => shift,
 	      };
   bless ($self, $class);
   return $self;
@@ -49,11 +50,20 @@ This module takes a RDF::RDFa::Template::Document and takes the RDF::RDFa::Templ
 
 sub execute {
   my $self = shift;
+  my $parser = RDF::RDFa::Parser->new($self->{XHTML}, 'http://example.org/foo/', {use_rtnlx => 1});
+  $parser->named_graphs('http://example.org/graph#', 'graph');
+  $parser->consume;
+  my $doc = RDF::RDFa::Template::Document->new($parser);
+  $doc->extract;
+
   my $return = 0;
-  foreach my $unit (@{$self->{DOC}->units}) {
-    my $client = new RDF::Query::Client ("SELECT * WHERE { }");
+#  die Dumper($doc->units);
+  foreach my $unit ($doc->units) {
+    my $client = RDF::Query::Client->new(
+		      'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }'
+				       );
     my $iterator = $client->execute($unit->endpoint);
-    push(@{$self->{RESULTS}}, $iterator);
+    $unit->results($iterator);
     $return++;
   }
   return $return;
