@@ -40,9 +40,7 @@ sub new {
 
 =head1 METHODS
 
-This module inherits all methods of its superclass, including a
-constructor which is reimplemented with an identical interface. In
-addition, it implements the following methods:
+It implements the following methods:
 
 =over
 
@@ -59,7 +57,16 @@ Returns a RDF::RDFa::Template::Unit for the specified graph name.
 
 Returns an array of RDF::RDFa::Template::Unit objects
 
+=iten $doc->dom
+
+Return an XML::LibXML::Document of the parsed source document.
+
 =cut
+
+sub dom {
+  my $self = shift;
+  return $self->{PARSED}->dom;
+}
 
 sub extract {
   my $self = shift;

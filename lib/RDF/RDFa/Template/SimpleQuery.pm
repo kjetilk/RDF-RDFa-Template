@@ -17,6 +17,9 @@ use RDF::Trine::Node::Variable;
 use RDF::Trine::Pattern;
 use RDF::RDFa::Parser;
 use RDF::Query::Client;
+use XML::LibXML;
+use XML::LibXML::SAX::Generator;
+
 use Data::Dumper;
 use Carp;
 
@@ -53,12 +56,12 @@ sub execute {
   my $parser = RDF::RDFa::Parser->new($self->{XHTML}, 'http://example.org/foo/', {use_rtnlx => 1});
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;
-  my $doc = RDF::RDFa::Template::Document->new($parser);
-  $doc->extract;
+  $self->{DOC} = RDF::RDFa::Template::Document->new($parser);
+  $self->{DOC}->extract;
 
   my $return = 0;
 #  die Dumper($doc->units);
-  foreach my $unit ($doc->units) {
+  foreach my $unit ($self->{DOC}->units) {
     my $client = RDF::Query::Client->new(
 		      'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }'
 				       );
@@ -69,6 +72,19 @@ sub execute {
   return $return;
 }
 
+
+sub rdfa_xhtml {
+  my $self = shift;
+  use XML::Handler::XMLWriter;
+  my $handler = XML::Handler::XMLWriter->new();
+  my $driver = XML::LibXML::SAX::Generator->new(Handler => $handler);
+
+  # generate SAX events that are captured
+  # by a SAX Handler or Filter.
+  $driver->generate($self->{DOC}->dom);
+}
+
+  
 
 
 =head1 AUTHOR
