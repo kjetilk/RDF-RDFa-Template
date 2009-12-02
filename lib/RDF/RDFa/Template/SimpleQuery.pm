@@ -11,6 +11,7 @@ RDF::RDFa::Template::SimpleQuery - Takes a Document and runs its BGP as a query
 
 use RDF::RDFa::Template::Unit;
 use RDF::RDFa::Template::Document;
+use RDF::RDFa::Template::SAXFilter;
 use RDF::Trine::Model;
 use RDF::Trine::Statement;
 use RDF::Trine::Node::Variable;
@@ -76,8 +77,9 @@ sub execute {
 sub rdfa_xhtml {
   my $self = shift;
   use XML::Handler::XMLWriter;
-  my $handler = XML::Handler::XMLWriter->new();
-  my $driver = XML::LibXML::SAX::Generator->new(Handler => $handler);
+  my $writer = XML::Handler::XMLWriter->new();
+  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $self->{DOC});
+  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 
   # generate SAX events that are captured
   # by a SAX Handler or Filter.

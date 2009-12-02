@@ -1,4 +1,4 @@
-package RDF::RDFa::Template::Document;
+package RDF::RDFa::Template::SAXFilter;
 
 use warnings;
 use strict;
@@ -10,7 +10,7 @@ RDF::RDFa::Template::SAXFilter - A SAX Filter that does variable insertions and 
 =cut
 
 use RDF::RDFa::Template::Unit;
-use base qw(XML::Filter::Base);
+use base qw(XML::SAX::Base);
 
 use Data::Dumper;
 use Carp;
@@ -19,37 +19,29 @@ sub new {
     my $class = shift;
     my %options = @_;
     $options{BaseURI} ||= './';	    
-    $options{SUBURI} = 'http://www.kjetil.kjernsmo.net/software/rat/substitutions#';
-    $options{RATURI} = 'http://www.kjetil.kjernsmo.net/software/rat/xmlns';  
     return bless \%options, $class;
 }
 
 sub start_element {
   my ($self, $element) = @_;
   my %attrs = %{$element->{Attributes}};
+  # TODO: doctype's
+  unless ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
+    $self->{Handler}->start_element($element);
+  }
+#  warn Dumper($element);
+}
 
-
-# sub new {
-#   my $class = shift;
-#   my $self  = {
-# 	       PARSED => shift,
-# 	       UNITS  => {},
-# 	       SUBURI => 'http://www.kjetil.kjernsmo.net/software/rat/substitutions#',
-# 	       RATURI => 'http://www.kjetil.kjernsmo.net/software/rat/xmlns',
-# 	      };
-#   bless ($self, $class);
-#   return $self;
-# }
-
+sub end_element {
+  my ($self, $element) = @_;
+  unless ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
+    $self->{Handler}->end_element($element);
+  }
+}
 
 =head1 SYNOPSIS
 
-  my $storage = RDF::Trine::Store::DBI->temporary_store;
-  my $parser = RDF::RDFa::Parser->new($storage, $xhtml, {}, 'http://example.com/foo');
-  $parser->named_graphs('http://example.org/graph#', 'graph');
-  $parser->consume;
-  my $doc = RDF::RDFa::Template::Document->($parser);
-  $doc->extract;
+
 
 =head1 METHODS
 
