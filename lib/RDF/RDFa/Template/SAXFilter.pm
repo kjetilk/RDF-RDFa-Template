@@ -25,9 +25,14 @@ sub new {
 sub start_element {
   my ($self, $element) = @_;
   my %attrs = %{$element->{Attributes}};
-  # TODO: doctype's
-  unless ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
-    $self->{Handler}->start_element($element);
+  # TODO: doctypes
+  if ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
+    if ($element->{LocalName} eq 'graph') {
+      # This element should not be sent to the result document,
+      # but its contents should be looped and variables substituted
+    }
+  } else {
+    $self->SUPER::start_element($element);
   }
 #  warn Dumper($element);
 }
@@ -35,7 +40,7 @@ sub start_element {
 sub end_element {
   my ($self, $element) = @_;
   unless ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
-    $self->{Handler}->end_element($element);
+    $self->SUPER::end_element($element);
   }
 }
 
