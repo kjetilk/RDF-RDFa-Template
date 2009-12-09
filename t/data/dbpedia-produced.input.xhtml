@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:g="http://example.org/graph#"
       xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
       xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions#"
       xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -14,7 +15,7 @@
     <h1>Aircraft produced in 1973</h1>
     <table>
       <tr><th>Name</th><th>Produced</th><th>First flight</th></tr>
-      <rat:graph xml:id="query2" endpoint="http://dbpedia.org/sparql">
+      <rat:graph g:graph="query2" endpoint="http://dbpedia.org/sparql">
 	<tr about="sub:resource">
 	  <td property="foaf:name" datatype="rdf:XMLLiteral"><rat:variable name="sub:name"/></td>
 	  <td property="dbo:produced">1973</td>
