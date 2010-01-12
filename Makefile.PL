@@ -19,6 +19,9 @@ test_requires 'Test::XML';
 
 include 'Test::Signature';
 
+auto_set_repository;
+
+
 sign;
 
 auto_install;
