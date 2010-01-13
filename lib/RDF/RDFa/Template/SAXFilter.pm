@@ -37,12 +37,12 @@ sub start_element {
     } elsif ($element->{LocalName} eq 'variable') {
       my ($var) = $element->{Attributes}->{name}->{Value} =~ m/sub:(\w+)/; # TODO: Don't hardcode sub-prefix
       my $binding = $self->{_results}->binding_value_by_name($var);
-      $self->SUPER::characters({Data => $binding});
+      $self->SUPER::characters({Data => $binding}); # TODO: I get a literal, not just a simple string;
     }
   } elsif ($element->{Attributes}->{about} 
 	   && ($element->{Attributes}->{about}->{Value} eq 'sub:resource')) { # TODO: coded to the test
     my $uri = $self->{_results}->binding_value_by_name('resource');
-    $uri =~ s/^\<(.*)\>$/$1/;
+    $uri =~ s/^<(.*)>$/$1/;
     $element->{Attributes}->{about}->{Value} = $uri;
     $self->SUPER::start_element($element);
   } else {
