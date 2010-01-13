@@ -62,6 +62,7 @@ foreach my $unit ($doc->units) {
   ok($unit->results($iterator), 'The results were added successfully to $doc');
 }
 
+# This stuff needs to be the actual XML generation
 use XML::Handler::XMLWriter;
 use XML::LibXML::SAX::Generator;
 my $writer = XML::Handler::XMLWriter->new();
