@@ -36,7 +36,7 @@ my ($rdf) = $f->load_file('data/dbpedia-comment.input.ttl');
 ok(defined($rdf), "Got RDF test data");
 
 my $rdfparser = RDF::Trine::Parser->new( 'turtle' );
-my $storage = RDF::Trine::Store->temporary_store;
+my $storage = RDF::Trine::Store::Memory->temporary_store;
 my $model = RDF::Trine::Model->new($storage);
 $rdfparser->parse_into_model ( "http://example.org/", $rdf, $model );
 
@@ -52,7 +52,7 @@ my ($sparql) = $f->load_file('data/dbpedia-comment.expected.rq');
 foreach my $unit ($doc->units) {
   my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
 
-  ok($query eq $sparql, "Correct SPARQL Query generated");
+  is($query, $sparql, "Correct SPARQL Query generated");
 
   my $engine = RDF::Query->new($query);
   
