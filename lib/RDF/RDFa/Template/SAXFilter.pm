@@ -41,7 +41,7 @@ sub start_element {
     } elsif ($element->{LocalName} eq 'variable') {
       my ($var) = $element->{Attributes}->{name}->{Value} =~ m/sub:(\w+)/; # TODO: Don't hardcode sub-prefix
       my $binding = $self->{_results}->binding_value_by_name($var);
-      $self->{_graph_stack}}->[-1]->{character_data} .= $binding; # TODO: I get a literal, not just a simple string;
+      $self->{_graph_stack}->[-1]->{character_data} = $binding->literal_value; # TODO: I get a literal, not just a simple string;
     }
   } elsif ($self->{_is_in_graph} && $element->{Attributes}->{about} 
 	   && ($element->{Attributes}->{about}->{Value} eq 'sub:resource')) { # TODO: coded to the test
@@ -50,20 +50,31 @@ sub start_element {
     $element->{Attributes}->{about}->{Value} = $uri;
     push (@{$self->{_graph_stack}}, $element);
   } elsif ($self->{_is_in_graph}) {
-    push (@{$self->{_graph_stack}, $element);
+    push (@{$self->{_graph_stack}}, $element);
   } else {
     $self->SUPER::start_element($element);
   }
-#  warn Dumper($element);
+#  warn Dumper($self->{_graph_stack});
 }
 
 sub end_element {
   my ($self, $element) = @_;
   if ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
     if ($element->{LocalName} eq 'graph') {
+      # First, we unwind what's on _graph_stack
+      # 
+      foreach my $node (@{$self->{_graph_stack}}) {
+	warn Dumper($node);
+	$self->SUPER::start_element($node);
+	$self->SUPER::characters({Data => $node->{character_data}});
+      }
+      foreach my $node (@{$self->{_graph_stack}}) {
+	$self->SUPER::end_element($node);
+      }
+      # Then, reset everything
       $self->{_currentgraph} = undef;
       $self->{_is_in_graph} = 0;
-      $self->{_results} = undef;
+      $self->{_graph_stack} = undef;
     }
   } else {
     $self->SUPER::end_element($element);
