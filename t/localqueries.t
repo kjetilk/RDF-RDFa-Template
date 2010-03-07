@@ -63,17 +63,18 @@ foreach my $unit ($doc->units) {
 }
 
 # This stuff needs to be the actual XML generation
-use XML::Handler::XMLWriter;
+use XML::SAX::Writer;
 use XML::LibXML::SAX::Generator;
-my $writer = XML::Handler::XMLWriter->new();
+
+my $output;
+
+my $writer = XML::SAX::Writer->new(Output => \$output);
 my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $doc);
 my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 
 # generate SAX events that are captured
 # by a SAX Handler or Filter.
 $driver->generate($doc->dom);
-
-my $output = "<foo/>";
 
 my ($rdfa) = $f->load_file('data/dbpedia-comment.expected.xhtml');
 

@@ -19,8 +19,8 @@ sub new {
     my $class = shift;
     my %options = @_;
     $options{BaseURI} ||= './';	    
-    $options{_graphstack} = [];
     $options{_is_in_graph} = 0;
+    $options{_currentgraph} = undef;
     return bless \%options, $class;
 }
 
@@ -64,7 +64,7 @@ sub end_element {
       # Then, reset everything
       $self->{_currentgraph} = undef;
       $self->{_is_in_graph} = 0;
-      $self->{_graph_stack} = undef;
+      $self->{_results} = undef;
     }
   } else {
     $self->SUPER::end_element($element);
