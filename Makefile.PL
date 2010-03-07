@@ -6,7 +6,7 @@ author   'Kjetil Kjernsmo <kjetilk@cpan.org>';
 license  'perl';
 
 requires 'RDF::RDFa::Parser' => 0.21;
-requires 'RDF::Trine' => 0.112;
+requires 'RDF::Trine' => 0.114;
 requires 'RDF::Query' => 2.0;
 requires 'RDF::Query::Client';
 requires 'XML::LibXML';
