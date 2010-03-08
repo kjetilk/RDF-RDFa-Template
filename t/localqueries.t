@@ -6,6 +6,7 @@
 use Test::More;
 use Test::Exception;
 use Test::XML;
+use FindBin qw($Bin);
 
 use_ok('RDF::RDFa::Template::Document');
 use_ok('RDF::RDFa::Template::SAXFilter');
@@ -16,9 +17,10 @@ use RDF::Trine::Model;
 use File::Util;
 my($f) = File::Util->new();
 
+my $datadir = $Bin . '/data/';
 
 # Get and parse the XHTML
-my ($rat) = $f->load_file('data/dbpedia-comment.input.xhtml');
+my ($rat) = $f->load_file($datadir . 'dbpedia-comment.input.xhtml');
 
 is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
 
@@ -31,7 +33,7 @@ ok($doc->extract, "Extract the RDF graphs from the RDFa Template");
 
 # Get and parse the RDF test data
 
-my ($rdf) = $f->load_file('data/dbpedia-comment.input.ttl');
+my ($rdf) = $f->load_file($datadir . 'dbpedia-comment.input.ttl');
 
 ok(defined($rdf), "Got RDF test data");
 
@@ -48,7 +50,7 @@ $rdfparser->parse_into_model ( "http://example.org/", $rdf, $model );
 #encoded in different named graphs. This is reflected in the foreach
 #below, but not in the expected SPARQL query. The idea is to make it
 #work with just one query first :-)
-my ($sparql) = $f->load_file('data/dbpedia-comment.expected.rq');
+my ($sparql) = $f->load_file($datadir . 'dbpedia-comment.expected.rq');
 foreach my $unit ($doc->units) {
   my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
 
@@ -76,7 +78,7 @@ my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 # by a SAX Handler or Filter.
 $driver->generate($doc->dom);
 
-my ($rdfa) = $f->load_file('data/dbpedia-comment.expected.xhtml');
+my ($rdfa) = $f->load_file($datadir . 'dbpedia-comment.expected.xhtml');
 
 is_well_formed_xml($rdfa, "Got the expected RDFa document");
 
