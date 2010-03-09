@@ -114,9 +114,14 @@ sub extract {
       push(@triples, $newstatement);
     }
     $return++;
+    my $endpoint = undef;
+    my $node = $nodes->shift;
+    if ($node->attributes->getNamedItem('endpoint')) {
+      $endpoint = $node->attributes->getNamedItem('endpoint')->getValue;
+    }
     $units{$graph} = RDF::RDFa::Template::Unit->new(
 			      triples => \@triples,
-			      endpoint => $nodes->shift->attributes->getNamedItem('endpoint')->getValue,
+			      endpoint => $endpoint,
 			      doc_graph	=> $graph);
     $self->{UNITS} = \%units;
   }
