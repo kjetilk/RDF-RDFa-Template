@@ -38,7 +38,7 @@ sub new {
 
 This module takes a RDF::RDFa::Template::Document and takes the RDF::RDFa::Template::Units it provides and run them against the endpoints.
 
-  my $storage = RDF::Trine::Store::DBI->temporary_store;
+  my $storage = RDF::Trine::Store::Memory->temporary_store;
   my $parser = RDF::RDFa::Parser->new($storage, $xhtml, {}, 'http://example.com/foo');
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;

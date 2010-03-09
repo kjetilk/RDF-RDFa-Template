@@ -82,8 +82,7 @@ sub start_element {
       }
       $self->{_element_with_datatype}->{Attributes} = \%attrs;
       $self->SUPER::start_element($self->{_element_with_datatype});
-      $self->SUPER::characters({Data => $binding->literal_value}); # TODO: I get a literal, not just a simple string;
-      
+      $self->SUPER::characters({Data => $binding->literal_value});
     }
   } elsif ($self->{_is_in_graph} && $element->{Attributes}->{about} 
 	   && ($element->{Attributes}->{about}->{Value} eq 'sub:resource')) { # TODO: coded to the test
