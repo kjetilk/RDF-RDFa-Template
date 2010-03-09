@@ -20,20 +20,57 @@ use RDF::RDFa::Parser;
 use RDF::Query::Client;
 use XML::LibXML;
 use XML::LibXML::SAX::Generator;
+use File::Util;
 
 use Data::Dumper;
 use Carp;
 
 sub new {
-  my $class = shift;
-  my $self  = {
-	       RAT => shift,
-	       MODEL => shift,
-	      };
+  my ($class, %args) = @_;
+  my $self;
+  $self->{RAT} = $args{rat};
+  if ($args{model}) {
+    if ($args{model}->isa('RDF::Trine::Model')) {
+      # We got a model
+      $self->{MODEL} = $args{model};
+      bless ($self, $class);
+      return $self;
+    } else {
+      croak 'model argument is not a RDF::Trine::Model';
+    }
+  }
+
+  my $rdf;
+  if ($args{filename}) {
+    if (-f $args{filename}) {
+      # We have a file
+      my($f) = File::Util->new();
+      ($rdf) = $f->load_file($args{filename});
+    } else {
+      croak "Cannot open $args{filename}";
+    }
+  } elsif ($args{rdf}) {
+    $rdf = $args{rdf};
+  } else {
+    croak "Neither a model, a file or some RDF, cannot continue";
+  }
+
+  $self->{MODEL} = _init_model($args{syntax}, $rdf, $args{baseuri});
+
+
   bless ($self, $class);
   return $self;
 }
 
+sub _init_model {
+  my ($syntax, $rdf, $baseuri) = @_;
+  my $rdfparser = RDF::Trine::Parser->new( $syntax );
+  my $storage = RDF::Trine::Store::Memory->temporary_store;
+  my $model = RDF::Trine::Model->new($storage);
+  $baseuri ||= "http://example.org/";
+  $rdfparser->parse_into_model ($baseuri, $rdf, $model);
+  return $model;
+}
 
 =head1 SYNOPSIS
 

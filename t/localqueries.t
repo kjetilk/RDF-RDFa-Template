@@ -4,7 +4,6 @@
 # Currently, it doesn't loop, it just checks a four hard-coded files.
 
 use Test::More;
-use Test::Exception;
 use Test::XML;
 use FindBin qw($Bin);
 
