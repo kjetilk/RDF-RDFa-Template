@@ -63,10 +63,19 @@ sub execute {
   my $return = 0;
 #  die Dumper($doc->units);
   foreach my $unit ($self->{DOC}->units) {
-    my $client = RDF::Query::Client->new(
-		      'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }'
-				       );
-    my $iterator = $client->execute($unit->endpoint);
+    my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
+    my $model = $self->{MODEL};
+    my $client;
+    if ($unit->endpoint) {
+      $client = RDF::Query::Client->new($query);
+      $model = $unit->endpoint;
+    } elsif ($self->{MODEL} && ($self->{MODEL}->isa('RDF::Query::Model'))) {
+      $client = RDF::Query->new($query);
+    } else {
+      croak "Need either an endpoint or an RDF::Query::Model";
+    }
+    my $iterator = $client->execute( $model );
+
     $unit->results($iterator);
     $return++;
   }
@@ -76,14 +85,15 @@ sub execute {
 
 sub rdfa_xhtml {
   my $self = shift;
-  use XML::Handler::XMLWriter;
-  my $writer = XML::Handler::XMLWriter->new();
-  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $self->{DOC});
+ use XML::LibXML::SAX::Builder;
+  my $builder = XML::LibXML::SAX::Builder->new();
+  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $self->{DOC});
   my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 
   # generate SAX events that are captured
   # by a SAX Handler or Filter.
   $driver->generate($self->{DOC}->dom);
+  return $builder->result;
 }
 
   
