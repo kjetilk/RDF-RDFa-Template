@@ -27,7 +27,8 @@ use Carp;
 sub new {
   my $class = shift;
   my $self  = {
-	       XHTML => shift,
+	       RAT => shift,
+	       MODEL => shift,
 	      };
   bless ($self, $class);
   return $self;
@@ -54,7 +55,7 @@ This module takes a RDF::RDFa::Template::Document and takes the RDF::RDFa::Templ
 
 sub execute {
   my $self = shift;
-  my $parser = RDF::RDFa::Parser->new($self->{XHTML}, 'http://example.org/foo/', {use_rtnlx => 1});
+  my $parser = RDF::RDFa::Parser->new($self->{RAT}, 'http://example.org/foo/', {use_rtnlx => 1});
   $parser->named_graphs('http://example.org/graph#', 'graph');
   $parser->consume;
   $self->{DOC} = RDF::RDFa::Template::Document->new($parser);
@@ -69,7 +70,7 @@ sub execute {
     if ($unit->endpoint) {
       $client = RDF::Query::Client->new($query);
       $model = $unit->endpoint;
-    } elsif ($self->{MODEL} && ($self->{MODEL}->isa('RDF::Query::Model'))) {
+    } elsif ($self->{MODEL} && ($self->{MODEL}->isa('RDF::Trine::Model'))) {
       $client = RDF::Query->new($query);
     } else {
       croak "Need either an endpoint or an RDF::Query::Model";
