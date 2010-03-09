@@ -82,10 +82,8 @@ my ($rdfa) = $f->load_file($datadir . 'dbpedia-comment.expected.xhtml');
 
 is_well_formed_xml($rdfa, "Got the expected RDFa document");
 
-TODO: {
-  local $TODO = 'The SAX Filter needs to be done';
-  is_xml($output, $rdfa, "The output is the expected RDFa");
-}
+is_xml($output, $rdfa, "The output is the expected RDFa");
+
 
 
 done_testing();

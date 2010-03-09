@@ -63,15 +63,24 @@ sub start_element {
       delete $self->{_element_with_datatype}->{Attributes}->{datatype};
       my ($var) = $element->{Attributes}->{name}->{Value} =~ m/sub:(\w+)/; # TODO: Don't hardcode sub-prefix
       my $binding = $self->{_results}->binding_value_by_name($var);
+      my %attrs = %{$self->{_element_with_datatype}->{Attributes}};
       if ($binding->has_language) {
-	my %attr = ('LocalName' => 'lang',
-		    'Prefix' => 'xml',
-		    'Value' => $binding->literal_value_language,
-		    'Name' => 'xml:lang',
-		    'NamespaceURI' => 'http://www.w3.org/XML/1998/namespace');
-	$self->{_element_with_datatype}->{Attributes} = {'http://www.w3.org/XML/1998/namespace}lang' => \%attr};
-	warn Dumper($self->{_element_with_datatype});
+	$attrs{'http://www.w3.org/XML/1998/namespace}lang'} = 
+	                   {'LocalName' => 'lang',
+			    'Prefix' => 'xml',
+			    'Value' => $binding->literal_value_language,
+			    'Name' => 'xml:lang',
+			    'NamespaceURI' => 'http://www.w3.org/XML/1998/namespace'};
       }
+      if ($binding->has_datatype) {
+	$attrs{'datatype'} = { 'LocalName' => 'datatype',
+                               'Prefix' => '',
+                               'Value' => $binding->literal_value_datatype,
+                               'Name' => 'datatype',
+                               'NamespaceURI' => undef
+			     }
+      }
+      $self->{_element_with_datatype}->{Attributes} = \%attrs;
       $self->SUPER::start_element($self->{_element_with_datatype});
       $self->SUPER::characters({Data => $binding->literal_value}); # TODO: I get a literal, not just a simple string;
       
