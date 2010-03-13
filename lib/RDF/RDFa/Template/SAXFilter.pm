@@ -85,8 +85,8 @@ sub start_element {
       $self->SUPER::characters({Data => $binding->literal_value});
     }
   } elsif ($self->{_is_in_graph} && $element->{Attributes}->{about} 
-	   && ($element->{Attributes}->{about}->{Value} eq 'sub:resource')) { # TODO: coded to the test
-    my $uri = $self->{_results}->binding_value_by_name('resource');
+	   && ($element->{Attributes}->{about}->{Value} =~ m/sub:(\w+)/)) {
+    my $uri = $self->{_results}->binding_value_by_name($1);
     $uri =~ s/^<(.*)>$/$1/;
     $element->{Attributes}->{about}->{Value} = $uri;
     $self->SUPER::start_element($element);
