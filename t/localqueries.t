@@ -23,70 +23,70 @@ my (@subdirs) = $f->list_dir($datadir,'--dirs-only');
 foreach my $dir (@subdirs) {
   next if ($dir =~ m/^\./); # Skip .svn etc.
 
-# Get and parse the XHTML
-my ($rat) = $f->load_file($datadir .  $dir . '/input.xhtml');
+  # Get and parse the XHTML
+  my ($rat) = $f->load_file($datadir .  $dir . '/input.xhtml');
 
-is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
+  is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
 
-my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/foo/', {use_rtnlx => 1});
+  my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/foo/', {use_rtnlx => 1});
 
-$parser->named_graphs('http://example.org/graph#', 'graph'); # Set how to find graph names
-ok($parser->consume, "The actual parsing went OK");
-my $doc = RDF::RDFa::Template::Document->new($parser);
-ok($doc->extract, "Extract the RDF graphs from the RDFa Template");
+  $parser->named_graphs('http://example.org/graph#', 'graph'); # Set how to find graph names
+  ok($parser->consume, "The actual parsing went OK");
+  my $doc = RDF::RDFa::Template::Document->new($parser);
+  ok($doc->extract, "Extract the RDF graphs from the RDFa Template");
 
-# Get and parse the RDF test data
+  # Get and parse the RDF test data
 
-my ($rdf) = $f->load_file($datadir .  $dir . '/input.ttl');
+  my ($rdf) = $f->load_file($datadir .  $dir . '/input.ttl');
 
-ok(defined($rdf), "Got RDF test data");
+  ok(defined($rdf), "Got RDF test data");
 
-my $rdfparser = RDF::Trine::Parser->new( 'turtle' );
-my $storage = RDF::Trine::Store::Memory->temporary_store;
-my $model = RDF::Trine::Model->new($storage);
-$rdfparser->parse_into_model ( "http://example.org/", $rdf, $model );
+  my $rdfparser = RDF::Trine::Parser->new( 'turtle' );
+  my $storage = RDF::Trine::Store::Memory->temporary_store;
+  my $model = RDF::Trine::Model->new($storage);
+  $rdfparser->parse_into_model ( "http://example.org/", $rdf, $model );
 
-# Get the SPARQL Query we expect to get from the RDFa Template document
-
-# TODO: From here on, these tests does not reflect how RDFa Templates
-# are intended to work:
-#In an RDFa Template document, there may be several SPARQL queries
-#encoded in different named graphs. This is reflected in the foreach
-#below, but not in the expected SPARQL query. The idea is to make it
-#work with just one query first :-)
-my ($sparql) = $f->load_file($datadir .  $dir . '/expected.rq');
-foreach my $unit ($doc->units) {
-  my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
-
-  is($query, $sparql, "Correct SPARQL Query generated");
-
-  my $engine = RDF::Query->new($query);
+  # Get the SPARQL Query we expect to get from the RDFa Template document
   
-  my $iterator = $engine->execute($model);
-  isa_ok($iterator, 'RDF::Trine::Iterator');
-  ok($iterator->is_bindings, 'The returned results are variable bindings');
-  ok($unit->results($iterator), 'The results were added successfully to $doc');
-}
+  # TODO: From here on, these tests does not reflect how RDFa Templates
+  # are intended to work:
+  #In an RDFa Template document, there may be several SPARQL queries
+  #encoded in different named graphs. This is reflected in the foreach
+  #below, but not in the expected SPARQL query. The idea is to make it
+  #work with just one query first :-)
+  my ($sparql) = $f->load_file($datadir .  $dir . '/expected.rq');
+  foreach my $unit ($doc->units) {
+    my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
 
-# This stuff needs to be the actual XML generation
-use XML::SAX::Writer;
-use XML::LibXML::SAX::Generator;
+    is($query, $sparql, "Correct SPARQL Query generated");
 
-my $output;
+    my $engine = RDF::Query->new($query);
 
-my $writer = XML::SAX::Writer->new(Output => \$output);
-my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $doc);
-my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
+    my $iterator = $engine->execute($model);
+    isa_ok($iterator, 'RDF::Trine::Iterator');
+    ok($iterator->is_bindings, 'The returned results are variable bindings');
+    ok($unit->results($iterator), 'The results were added successfully to $doc');
+  }
 
-# generate SAX events that are captured
-# by a SAX Handler or Filter.
-$driver->generate($doc->dom);
+  # This stuff needs to be the actual XML generation
+  use XML::SAX::Writer;
+  use XML::LibXML::SAX::Generator;
 
-my ($rdfa) = $f->load_file($datadir .  $dir . '/expected.xhtml');
+  my $output;
 
-is_well_formed_xml($rdfa, "Got the expected RDFa document");
+  my $writer = XML::SAX::Writer->new(Output => \$output);
+  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $doc);
+  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 
-is_xml($output, $rdfa, "The output is the expected RDFa");
+  # generate SAX events that are captured
+  # by a SAX Handler or Filter.
+  $driver->generate($doc->dom);
+
+  my ($rdfa) = $f->load_file($datadir .  $dir . '/expected.xhtml');
+
+  is_well_formed_xml($rdfa, "Got the expected RDFa document");
+
+  is_xml($output, $rdfa, "The output is the expected RDFa");
 
 }
 
