@@ -52,10 +52,12 @@ foreach my $dir (@subdirs) {
   # are intended to work:
   #In an RDFa Template document, there may be several SPARQL queries
   #encoded in different named graphs. This is reflected in the foreach
-  #below, but not in the expected SPARQL query. The idea is to make it
-  #work with just one query first :-)
-  my ($sparql) = $f->load_file($datadir .  $dir . '/expected.rq');
+  #below.
+  my $i = 0;
   foreach my $unit ($doc->units) {
+    my ($sparql) = $f->load_file($datadir .  $dir . "/expected-$i.rq");
+    ok($sparql, "Got expected query from $dir/expected-$i.rq");
+
     my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
 
     is($query, $sparql, "Correct SPARQL Query generated");
@@ -66,6 +68,7 @@ foreach my $dir (@subdirs) {
     isa_ok($iterator, 'RDF::Trine::Iterator');
     ok($iterator->is_bindings, 'The returned results are variable bindings');
     ok($unit->results($iterator), 'The results were added successfully to $doc');
+    $i++;
   }
 
   # This stuff needs to be the actual XML generation
