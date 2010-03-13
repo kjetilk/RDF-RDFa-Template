@@ -8,16 +8,16 @@ use FindBin qw($Bin);
 use File::Util;
 my($f) = File::Util->new();
 
-my $datadir = $Bin . '/data/';
+my $datadir = $Bin . '/data/localqueries/';
 
 use_ok('RDF::RDFa::Template::SimpleQuery');
 
 # Get and parse the XHTML
-my ($rat) = $f->load_file($datadir . 'dbpedia-comment.input.xhtml');
+my ($rat) = $f->load_file($datadir . 'dbpedia-comment/input.xhtml');
 
 is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
 
-my ($rdfa) = $f->load_file($datadir . 'dbpedia-comment.expected.xhtml');
+my ($rdfa) = $f->load_file($datadir . 'dbpedia-comment/expected.xhtml');
 
 is_well_formed_xml($rdfa, "Got the expected RDFa document");
 
@@ -42,7 +42,7 @@ dies_ok {
 } 'Dies if file doesnt exist';
 
   my $query = RDF::RDFa::Template::SimpleQuery->new(rat => $rat, 
-						    filename => $datadir . 'dbpedia-comment.input.ttl',
+						    filename => $datadir . 'dbpedia-comment/input.ttl',
 						    syntax => 'turtle');
   isa_ok($query, 'RDF::RDFa::Template::SimpleQuery');
   ok($query->execute, "Query executed successfully");
@@ -52,7 +52,7 @@ dies_ok {
   is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
 }
 
-my ($rdf) = $f->load_file($datadir . 'dbpedia-comment.input.ttl');
+my ($rdf) = $f->load_file($datadir . 'dbpedia-comment/input.ttl');
 
 ok(defined($rdf), "Got RDF test data");
 

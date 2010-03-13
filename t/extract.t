@@ -6,10 +6,10 @@ use FindBin qw($Bin);
 use File::Util;
 my($f) = File::Util->new();
 
-my $datadir = $Bin . '/data/';
+my $datadir = $Bin . '/data/localqueries/';
 
 # Get and parse the XHTML
-my ($rat) = $f->load_file($datadir . 'dbpedia-comment.input.xhtml');
+my ($rat) = $f->load_file($datadir . 'dbpedia-comment/input.xhtml');
 
 use_ok('RDF::RDFa::Template::Document');
 use_ok('RDF::RDFa::Template::SimpleQuery');
