@@ -26,7 +26,7 @@ foreach my $dir (@subdirs) {
   # Get and parse the XHTML
   my ($rat) = $f->load_file($datadir .  $dir . '/input.xhtml');
 
-  is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
+  is_well_formed_xml($rat, "Input RDFa Template document in $dir is well-formed");
 
   my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/foo/', {use_rtnlx => 1});
 
@@ -39,7 +39,7 @@ foreach my $dir (@subdirs) {
 
   my ($rdf) = $f->load_file($datadir .  $dir . '/input.ttl');
 
-  ok(defined($rdf), "Got RDF test data");
+  ok(defined($rdf), "Got RDF test data from $dir");
 
   my $rdfparser = RDF::Trine::Parser->new( 'turtle' );
   my $storage = RDF::Trine::Store::Memory->temporary_store;
@@ -84,7 +84,7 @@ foreach my $dir (@subdirs) {
 
   my ($rdfa) = $f->load_file($datadir .  $dir . '/expected.xhtml');
 
-  is_well_formed_xml($rdfa, "Got the expected RDFa document");
+  is_well_formed_xml($rdfa, "Got the expected RDFa document from $dir");
 
   is_xml($output, $rdfa, "The output is the expected RDFa");
 
