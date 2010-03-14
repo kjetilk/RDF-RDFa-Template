@@ -1,0 +1,35 @@
+@prefix :     <http://usefulinc.com/ns/doap#> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix my:   <http://www.kjetil.kjernsmo.net/software/rat/doap#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+
+<>
+    dc:title     "Changes for RDF-RDFa-Template" ;
+    dc:subject   my:project ;
+    dc:creator   <http://www.kjetil.kjernsmo.net/foaf#me> .
+
+my:project	 
+    a           :Project ;
+    :name       "RDF-RDFa-Template" ;
+    :shortdesc  "A simple RDFa-like templating language" ;
+    :created    "2010-03-14"^^xsd:date ;
+    :programming-language "Perl" ;
+    :maintainer <http://www.kjetil.kjernsmo.net/foaf#me> ;
+    :repository <http://svn.kjernsmo.net/RDF-RDFa-Template/> ;
+    :homepage   <http://www.kjetil.kjernsmo.net/software/rat/> ;
+    :bug-database <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template> ;
+    :release    my:v_0_01 .
+
+<http://www.kjetil.kjernsmo.net/foaf#me>
+    a           foaf:Person ;
+    foaf:name   "Kjetil Kjernsmo" ;
+    foaf:mbox   <mailto:kjetilk@cpan.org> .
+
+<http://svn.kjernsmo.net/RDF-RDFa-Template/> a :SVNRepository .
+
+my:v_0_01
+    a           :Version ;
+    dc:issued   "2010-03-20"^^xsd:date ;
+    :revision   "0.01"^^xsd:string .
