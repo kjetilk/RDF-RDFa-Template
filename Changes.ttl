@@ -6,7 +6,7 @@
 
 
 <>
-    dc:title     "Changes for RDF-RDFa-Template" ;
+    dc:title     "DOAP for RDF-RDFa-Template" ;
     dc:subject   my:project ;
     dc:creator   <http://www.kjetil.kjernsmo.net/foaf#me> .
 
