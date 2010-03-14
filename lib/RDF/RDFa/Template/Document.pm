@@ -42,22 +42,25 @@ sub new {
 
 It implements the following methods:
 
-=over
+=head2 new
 
-=item $doc->extract
+The constructor. An L<RDF::RDFa::Parser> object is a required
+argument.
+
+=head2 extract
 
 Extracts the Basic Graph Patterns from the parsed document. Returns
 the number of patterns extracted.
 
-=item $doc->unit( $graph_name )
+=head2 unit( $graph_name )
 
 Returns a RDF::RDFa::Template::Unit for the specified graph name.
 
-=item $doc->units
+=head2 units
 
 Returns an array of RDF::RDFa::Template::Unit objects
 
-=iten $doc->dom
+=head2 dom
 
 Return an XML::LibXML::Document of the parsed source document.
 
@@ -161,7 +164,7 @@ Kjetil Kjernsmo, C<< <kjetilk at cpan.org> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Kjetil Kjernsmo.
+Copyright 2010 Kjetil Kjernsmo.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

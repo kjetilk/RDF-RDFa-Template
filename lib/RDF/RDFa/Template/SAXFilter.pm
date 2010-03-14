@@ -118,19 +118,45 @@ sub end_element {
 
 =head1 SYNOPSIS
 
+  use XML::LibXML::SAX::Builder;
+  use XML::LibXML::SAX::Generator;
+  my $builder = XML::LibXML::SAX::Builder->new();
+  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $doc);
+  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
+  $driver->generate($doc->dom);
 
+$doc must contain a L<XML::LibXML::Document> and the interesting result
+from this operation can be found by saying $builder->result;
 
 =head1 METHODS
 
+=head2 C<new>
+=head2 C<start_element>
+=head2 C<end_element>
+
+This is a SAX Filter implementation and so implements these methods,
+but they are of little concern to the user.
+
+=head1 TODO
+
+Apart from the general TODO of the distribution, this uses a
+deprecated module L<XML::LibXML::SAX::Generator>. Its replacement is
+unfortunately undocumented at the time of this writing. This is the
+cause of a number of warnings when the filter is run.
 
 =head1 AUTHOR
 
 Kjetil Kjernsmo, C<< <kjetilk at cpan.org> >>
 
+=head1 ACKNOWLEDGEMENTS
+
+This would have been hard to do without the help of the dahuts,
+especially Kip Hampton and Chris Prather.
+
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Kjetil Kjernsmo.
+Copyright 2010 Kjetil Kjernsmo.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
