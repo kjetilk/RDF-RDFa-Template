@@ -38,7 +38,7 @@ warn $output->toStringEC14N;
 is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
 
 TODO: {
-  local $TODO = "External needs to work";
+  local $TODO = "Namespaces seem to be stripped";
   use XML::LibXML::XPathContext;
   my $xpc = XML::LibXML::XPathContext->new($output);
   my $uri = $xpc->lookupNs('rdfs');

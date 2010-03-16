@@ -90,7 +90,13 @@ foreach my $dir (@subdirs) {
   is_well_formed_xml($rdfa, "Got the expected RDFa document from $dir");
 
   is_xml($output, $rdfa, "The output is the expected RDFa");
-
+  TODO: {
+      local $TODO = "Namespaces seem to be stripped";
+      use XML::LibXML::XPathContext;
+      my $xpc = XML::LibXML::XPathContext->new($output);
+      my $uri = $xpc->lookupNs('rdfs');
+      is($xpc->lookupNs('rdfs'), 'http://www.w3.org/2000/01/rdf-schema#', "rdfs namespace is correct ");
+  }
 }
 
 done_testing();

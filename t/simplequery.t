@@ -4,6 +4,7 @@ use Test::More;
 use Test::Exception;
 
 use Test::XML;
+
 use FindBin qw($Bin);
 use File::Util;
 my($f) = File::Util->new();
@@ -50,6 +51,15 @@ dies_ok {
   my $output = $query->rdfa_xhtml;
   isa_ok($output, 'XML::LibXML::Document');
   is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
+
+  TODO: {
+      local $TODO = "Namespaces seem to be stripped";
+      use XML::LibXML::XPathContext;
+      my $xpc = XML::LibXML::XPathContext->new($output);
+      my $uri = $xpc->lookupNs('rdfs');
+      is($xpc->lookupNs('rdfs'), 'http://www.w3.org/2000/01/rdf-schema#', "rdfs namespace is correct ");
+    }
+
 }
 
 my ($rdf) = $f->load_file($datadir . 'dbpedia-comment/input.ttl');
@@ -94,6 +104,13 @@ dies_ok {
   my $output = $query->rdfa_xhtml;
   isa_ok($output, 'XML::LibXML::Document');
   is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
+  TODO: {
+      local $TODO = "Namespaces seem to be stripped";
+      use XML::LibXML::XPathContext;
+      my $xpc = XML::LibXML::XPathContext->new($output);
+      my $uri = $xpc->lookupNs('rdfs');
+      is($xpc->lookupNs('rdfs'), 'http://www.w3.org/2000/01/rdf-schema#', "rdfs namespace is correct ");
+  }
 }
 
 
