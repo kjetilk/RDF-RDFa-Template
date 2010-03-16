@@ -86,8 +86,7 @@ sub start_element {
     }
   } elsif ($self->{_is_in_graph} && $element->{Attributes}->{about} 
 	   && ($element->{Attributes}->{about}->{Value} =~ m/sub:(\w+)/)) {
-    my $uri = $self->{_results}->binding_value_by_name($1);
-    $uri =~ s/^<(.*)>$/$1/;
+    my $uri = $self->{_results}->binding_value_by_name($1)->uri_value;
     $element->{Attributes}->{about}->{Value} = $uri;
     $self->SUPER::start_element($element);
   } elsif ($self->{_element_with_datatype}) {
