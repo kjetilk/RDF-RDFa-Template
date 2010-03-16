@@ -119,22 +119,20 @@ sub new {
     }
   }
 
-  my $rdf;
   if ($args{filename}) {
     if (-f $args{filename}) {
       # We have a file
       my($f) = File::Util->new();
-      ($rdf) = $f->load_file($args{filename});
+      my ($rdf) = $f->load_file($args{filename});
+      $self->{MODEL} = _init_model($args{syntax}, $rdf, $args{baseuri});
     } else {
       croak "Cannot open $args{filename}";
     }
   } elsif ($args{rdf}) {
-    $rdf = $args{rdf};
-  } else {
-    croak "Neither a model, a file or some RDF, cannot continue";
+    $self->{MODEL} = _init_model($args{syntax}, $args{rdf}, $args{baseuri});
   }
 
-  $self->{MODEL} = _init_model($args{syntax}, $rdf, $args{baseuri});
+
 
 
   bless ($self, $class);
