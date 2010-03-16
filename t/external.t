@@ -14,11 +14,11 @@ my $datadir = $Bin . '/data/';
 use_ok('RDF::RDFa::Template::SimpleQuery');
 
 # Get and parse the XHTML
-my ($rat) = $f->load_file($datadir . 'dbpedia-mustang-mtow.input.xhtml');
+my ($rat) = $f->load_file($datadir . 'dbpedia-mustang-range.input.xhtml');
 
 is_well_formed_xml($rat, "Input RDFa Template document is well-formed");
 
-my ($rdfa) = $f->load_file($datadir . 'dbpedia-mustang-mtow.expected.xhtml');
+my ($rdfa) = $f->load_file($datadir . 'dbpedia-mustang-range.expected.xhtml');
 
 is_well_formed_xml($rdfa, "Got the expected RDFa document");
 
