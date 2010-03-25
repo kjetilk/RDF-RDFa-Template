@@ -25,6 +25,32 @@ sub new {
 }
 
 
+sub start_prefix_mapping {
+  my ($self, $mapping) = @_;
+  warn Data::Dumper::Dumper($mapping);
+#   if (! $element->{Attributes}->{'xmlns:rat'}) {
+#     delete $element->{Attributes}->{'xmlns:rat'};
+#   }
+#   if ($element->{Attributes}->{'xmlns:sub'}) {
+#     delete $element->{Attributes}->{'xmlns:sub'};
+#   }
+#   if ($element->{Attributes}->{'xmlns:g'}) {
+#     delete $element->{Attributes}->{'xmlns:g'};
+#   }
+  
+
+#  unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
+#  {
+    $self->SUPER::start_prefix_mapping($mapping);
+#  }
+}
+
+sub end_prefix_mapping {
+  my ($self, $mapping) = @_;
+  $self->SUPER::end_prefix_mapping($mapping);
+}
+
+
 sub start_element {
   my ($self, $element) = @_;
   # TODO: Qnames shouldn't be required.
@@ -35,15 +61,6 @@ sub start_element {
   if ($element->{Attributes}->{'rat:doctype-public'}) {
     $self->SUPER::doctype_decl($element->{Attributes}->{'rat:doctype-public'}->{Value});
     delete $element->{Attributes}->{'rat:doctype-public'};
-  }
-  if ($element->{Attributes}->{'xmlns:rat'}) {
-    delete $element->{Attributes}->{'xmlns:rat'};
-  }
-  if ($element->{Attributes}->{'xmlns:sub'}) {
-    delete $element->{Attributes}->{'xmlns:sub'};
-  }
-  if ($element->{Attributes}->{'xmlns:g'}) {
-    delete $element->{Attributes}->{'xmlns:g'};
   }
   if ($element->{Attributes}->{'datatype'}) {
     $self->{_element_with_datatype} = $element;
