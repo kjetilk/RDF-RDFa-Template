@@ -24,25 +24,24 @@ sub new {
     return bless \%options, $class;
 }
 
+my $nsnow = 0;
+
+sub xml_decl {
+  $nsnow = 1;
+}
+
+
 
 sub start_prefix_mapping {
   my ($self, $mapping) = @_;
+  if ($nsnow) {
   warn Data::Dumper::Dumper($mapping);
-#   if (! $element->{Attributes}->{'xmlns:rat'}) {
-#     delete $element->{Attributes}->{'xmlns:rat'};
-#   }
-#   if ($element->{Attributes}->{'xmlns:sub'}) {
-#     delete $element->{Attributes}->{'xmlns:sub'};
-#   }
-#   if ($element->{Attributes}->{'xmlns:g'}) {
-#     delete $element->{Attributes}->{'xmlns:g'};
-#   }
-  
 
-#  unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
-#  {
+  unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
+  {
     $self->SUPER::start_prefix_mapping($mapping);
-#  }
+  }
+}
 }
 
 sub end_prefix_mapping {
@@ -54,6 +53,10 @@ sub end_prefix_mapping {
 sub start_element {
   my ($self, $element) = @_;
   # TODO: Qnames shouldn't be required.
+  if ($element->{LocalName} eq 'html') {
+    $nsnow = 0;
+  }
+
   if ($element->{Attributes}->{'rat:doctype-system'}) {
     $self->SUPER::doctype_decl($element->{Attributes}->{'rat:doctype-system'}->{Value});
     delete $element->{Attributes}->{'rat:doctype-system'};
