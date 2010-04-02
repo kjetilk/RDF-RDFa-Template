@@ -51,7 +51,8 @@ use RDF::Trine::Pattern;
 use RDF::RDFa::Parser;
 use RDF::Query::Client;
 use XML::LibXML;
-use XML::LibXML::SAX::Generator;
+use XML::LibXML::SAX::Parser;
+use XML::LibXML::SAX::Builder;
 use File::Util;
 
 use Data::Dumper;
@@ -200,14 +201,13 @@ variables inserted.
 
 sub rdfa_xhtml {
   my $self = shift;
-  use XML::LibXML::SAX::Builder;
   my $builder = XML::LibXML::SAX::Builder->new();
-  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $self->{DOC});
-  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
 
-  # generate SAX events that are captured
-  # by a SAX Handler or Filter.
-  $driver->generate($self->{DOC}->dom);
+  my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder);
+
+  my $generator = XML::LibXML::SAX::Parser->new(Handler => $sax);
+  $generator->generate($self->{DOC}->dom);
+
   return $builder->result;
 }
 
