@@ -83,7 +83,7 @@ foreach my $dir (@subdirs) {
 
   my $output = $builder->result;
 
-  ok($output, "Got some output");
+  isa_ok($output, 'XML::LibXML::Document');
 
   my ($rdfa) = $f->load_file($datadir .  $dir . '/expected.xhtml');
 

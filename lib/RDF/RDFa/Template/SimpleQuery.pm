@@ -204,11 +204,23 @@ sub rdfa_xhtml {
   my $builder = XML::LibXML::SAX::Builder->new();
 
   my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $self->{DOC});
-
   my $generator = XML::LibXML::SAX::Parser->new(Handler => $sax);
-  $generator->generate($self->{DOC}->dom);
 
-  return $builder->result;
+  my $orig = $self->{DOC}->dom;
+
+  # Get the doctypes and stuff
+  my $xpc = XML::LibXML::XPathContext->new($orig);
+  $xpc->registerNs('rat', $self->{DOC}->{RATURI});
+  $xpc->registerNs('xhtml', 'http://www.w3.org/1999/xhtml');
+  my ($system_id) = $xpc->findnodes('/xhtml:html/@rat:doctype-system') || 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd';
+  my ($public_id) = $xpc->findnodes('/xhtml:html/@rat:doctype-public') || '-//W3C//DTD XHTML+RDFa 1.0//EN';
+  my $dtd = XML::LibXML::Dtd->new($public_id, $system_id);
+  $generator->generate($orig);
+
+  my $output = $builder->result;
+  $output->setExternalSubset($dtd);
+
+  return $output;
 }
 
   

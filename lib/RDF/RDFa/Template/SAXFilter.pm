@@ -25,32 +25,15 @@ sub new {
 }
 
 
-# sub start_prefix_mapping {
-#   my ($self, $mapping) = @_;
-#   warn Data::Dumper::Dumper($mapping);
-
-#   unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
-#   {
-#     $self->SUPER::start_prefix_mapping($mapping);
-#   }
-# }
-
-# sub end_prefix_mapping {
-#   my ($self, $mapping) = @_;
-#   $self->SUPER::end_prefix_mapping($mapping);
-# }
-
-
 sub start_element {
   my ($self, $element) = @_;
-    #  warn Data::Dumper::Dumper($element);
-  
+  # $self->{Doc} here is set by the parameter used in the call to this
+  # module, which is usually set to $self->{DOC} in the calling
+  # code. TODO: Use methods here.
   if ($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'}) {
-    $self->SUPER::doctype_decl($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'}->{Value});
     delete $element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'};
   }
   if ($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'}) {
-    $self->SUPER::doctype_decl($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'}->{Value});
     delete $element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'};
   }
   if ($element->{Attributes}->{'{}datatype'}) {
@@ -125,12 +108,12 @@ sub end_element {
 
 =head1 SYNOPSIS
 
+  use XML::LibXML::SAX::Parser;
   use XML::LibXML::SAX::Builder;
-  use XML::LibXML::SAX::Generator;
   my $builder = XML::LibXML::SAX::Builder->new();
-  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $doc);
-  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
-  $driver->generate($doc->dom);
+  my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $doc);
+  my $generator = XML::LibXML::SAX::Parser->new(Handler => $sax);
+  $generator->generate($doc->dom);
 
 $doc must contain a L<XML::LibXML::Document> and the interesting result
 from this operation can be found by saying $builder->result;
@@ -143,13 +126,6 @@ from this operation can be found by saying $builder->result;
 
 This is a SAX Filter implementation and so implements these methods,
 but they are of little concern to the user.
-
-=head1 TODO
-
-Apart from the general TODO of the distribution, this uses a
-deprecated module L<XML::LibXML::SAX::Generator>. Its replacement is
-unfortunately undocumented at the time of this writing. This is the
-cause of a number of warnings when the filter is run.
 
 =head1 AUTHOR
 

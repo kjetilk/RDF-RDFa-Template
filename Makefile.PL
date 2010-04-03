@@ -12,10 +12,10 @@ requires 'RDF::Trine' => 0.114;
 requires 'RDF::Trine::Node::Literal::XML';
 requires 'RDF::Query' => 2.0;
 requires 'RDF::Query::Client';
-requires 'XML::LibXML';
+requires 'XML::LibXML' => 1.59;
 requires 'XML::SAX::Base';
 requires 'XML::LibXML::SAX::Builder';
-requires 'XML::LibXML::SAX::Generator';
+requires 'XML::LibXML::SAX::Parser';
 requires 'File::Util';
 
 
