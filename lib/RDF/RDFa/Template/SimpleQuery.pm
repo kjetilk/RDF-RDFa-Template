@@ -21,7 +21,7 @@ that most users of RDF::RDFa::Template would want to do.
 						    syntax => 'turtle');
   $query->execute;
   my $output = $query->rdfa_xhtml;
-  $output->toStringEC14N;
+  $output->toStringC14N;
 
 or
 
@@ -35,7 +35,7 @@ or
   my $query = RDF::RDFa::Template::SimpleQuery->new(rat => $rat, model => $model);
   $query->execute;
   my $output = $query->rdfa_xhtml;
-  $output->toStringEC14N;
+  $output->toStringC14N;
 
 =head1 METHODS
 

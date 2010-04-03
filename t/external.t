@@ -34,15 +34,12 @@ ok($query->execute, "Query executed successfully");
 my $output = $query->rdfa_xhtml;
 isa_ok($output, 'XML::LibXML::Document');
 
-warn $output->toStringEC14N;
-is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
+is_xml($output->toStringC14N, $rdfa, "The output is the expected RDFa");
 
-TODO: {
-  local $TODO = "Namespaces seem to be stripped";
-  use XML::LibXML::XPathContext;
-  my $xpc = XML::LibXML::XPathContext->new($output);
-  my $uri = $xpc->lookupNs('rdfs');
-  is($xpc->lookupNs('rdfs'), 'http://www.w3.org/2000/01/rdf-schema#', "rdfs namespace is correct ");
-  is($xpc->lookupNs('dbp'), 'http://dbpedia.org/property/', "dbp namespace is correct ");
-}
+use XML::LibXML::XPathContext;
+my $xpc = XML::LibXML::XPathContext->new($output);
+my $uri = $xpc->lookupNs('rdfs');
+is($xpc->lookupNs('rdfs'), 'http://www.w3.org/2000/01/rdf-schema#', "rdfs namespace is correct ");
+is($xpc->lookupNs('dbp'), 'http://dbpedia.org/property/', "dbp namespace is correct ");
+
 done_testing();
