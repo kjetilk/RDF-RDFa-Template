@@ -72,24 +72,25 @@ foreach my $dir (@subdirs) {
   }
 
   # This stuff needs to be the actual XML generation
-  use XML::SAX::Writer;
   use XML::LibXML::SAX::Parser;
+  use XML::LibXML::SAX::Builder;
+  
+  my $builder = XML::LibXML::SAX::Builder->new();
+  my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $doc);
 
-  my $output;
+  my $generator = XML::LibXML::SAX::Parser->new(Handler => $sax);
+  $generator->generate($doc->dom);
 
-  my $writer = XML::SAX::Writer->new(Output => \$output);
-  my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $doc);
-  my $driver = XML::LibXML::SAX::Parser->new(Handler => $filter);
+  my $output = $builder->result;
 
-  # generate SAX events that are captured
-  # by a SAX Handler or Filter.
-  $driver->generate($doc->dom);
+  ok($output, "Got some output");
 
   my ($rdfa) = $f->load_file($datadir .  $dir . '/expected.xhtml');
 
   is_well_formed_xml($rdfa, "Got the expected RDFa document from $dir");
 
-  is_xml($output, $rdfa, "The output is the expected RDFa");
+  is_xml($output->toStringEC14N, $rdfa, "The output is the expected RDFa");
+
   TODO: {
       local $TODO = "Namespaces seem to be stripped";
       use XML::LibXML::XPathContext;
