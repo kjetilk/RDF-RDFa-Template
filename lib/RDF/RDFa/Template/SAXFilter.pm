@@ -25,50 +25,51 @@ sub new {
 }
 
 
-sub start_prefix_mapping {
-  my ($self, $mapping) = @_;
-  warn Data::Dumper::Dumper($mapping);
+# sub start_prefix_mapping {
+#   my ($self, $mapping) = @_;
+#   warn Data::Dumper::Dumper($mapping);
 
-  unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
-  {
-    $self->SUPER::start_prefix_mapping($mapping);
-  }
-}
+#   unless (($mapping->{NamespaceURI} eq 'http://www.kjetil.kjernsmo.net/software/rat/xmlns'))
+#   {
+#     $self->SUPER::start_prefix_mapping($mapping);
+#   }
+# }
 
-sub end_prefix_mapping {
-  my ($self, $mapping) = @_;
-  $self->SUPER::end_prefix_mapping($mapping);
-}
+# sub end_prefix_mapping {
+#   my ($self, $mapping) = @_;
+#   $self->SUPER::end_prefix_mapping($mapping);
+# }
 
 
 sub start_element {
   my ($self, $element) = @_;
-  # TODO: Qnames shouldn't be required.
-  if ($element->{Attributes}->{'rat:doctype-system'}) {
-    $self->SUPER::doctype_decl($element->{Attributes}->{'rat:doctype-system'}->{Value});
-    delete $element->{Attributes}->{'rat:doctype-system'};
+    #  warn Data::Dumper::Dumper($element);
+  
+  if ($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'}) {
+    $self->SUPER::doctype_decl($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'}->{Value});
+    delete $element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-system'};
   }
-  if ($element->{Attributes}->{'rat:doctype-public'}) {
-    $self->SUPER::doctype_decl($element->{Attributes}->{'rat:doctype-public'}->{Value});
-    delete $element->{Attributes}->{'rat:doctype-public'};
+  if ($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'}) {
+    $self->SUPER::doctype_decl($element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'}->{Value});
+    delete $element->{Attributes}->{'{' . $self->{Doc}->{RATURI} . '}doctype-public'};
   }
-  if ($element->{Attributes}->{'datatype'}) {
+  if ($element->{Attributes}->{'{}datatype'}) {
     $self->{_element_with_datatype} = $element;
   }
   # TODO: RATURI method
-  if ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
+  if (defined($element->{NamespaceURI}) && ($element->{NamespaceURI} eq $self->{Doc}->{RATURI})) {
     if ($element->{LocalName} eq 'graph') {
       # This element should not be sent to the result document,
       # but its contents should be looped and variables substituted
-      $self->{_currentgraph} = $element->{Attributes}->{'g:graph'}->{Value}; # TODO: Fix, don't require hardcoding
+      $self->{_currentgraph} = $element->{Attributes}->{'{http://example.org/graph#}graph'}->{Value}; # TODO: Fix, don't require hardcoding
       if (defined($self->{_currentgraph})) {
 	$self->{_is_in_graph} = 1;
       }
       die "couldn't find current graph name" unless $self->{_currentgraph};
       $self->{_results} = $self->{Doc}->unit($self->{Doc}->{PARSED}->uri . $self->{_currentgraph})->results; # TODO: PARSED method
     } elsif ($element->{LocalName} eq 'variable') {
-      delete $self->{_element_with_datatype}->{Attributes}->{datatype};
-      my ($var) = $element->{Attributes}->{name}->{Value} =~ m/sub:(\w+)/; # TODO: Don't hardcode sub-prefix
+      delete $self->{_element_with_datatype}->{Attributes}->{'{}datatype'};
+      my ($var) = $element->{Attributes}->{'{}name'}->{Value} =~ m/sub:(\w+)/; # TODO: Don't hardcode sub-prefix
       my $binding = $self->{_results}->binding_value_by_name($var);
       my %attrs = %{$self->{_element_with_datatype}->{Attributes}};
       if ($binding->has_language) {
@@ -80,7 +81,7 @@ sub start_element {
 			    'NamespaceURI' => 'http://www.w3.org/XML/1998/namespace'};
       }
       if ($binding->has_datatype) {
-	$attrs{'datatype'} = { 'LocalName' => 'datatype',
+	$attrs{'{}datatype'} = { 'LocalName' => 'datatype',
                                'Prefix' => '',
                                'Value' => $binding->literal_value_datatype,
                                'Name' => 'datatype',
@@ -91,13 +92,13 @@ sub start_element {
       $self->SUPER::start_element($self->{_element_with_datatype});
       $self->SUPER::characters({Data => $binding->literal_value});
     }
-  } elsif ($self->{_is_in_graph} && $element->{Attributes}->{about} 
-	   && ($element->{Attributes}->{about}->{Value} =~ m/sub:(\w+)/)) {
+  } elsif ($self->{_is_in_graph} && $element->{Attributes}->{'{}about'} 
+	   && ($element->{Attributes}->{'{}about'}->{Value} =~ m/sub:(\w+)/)) {
     my $uri = $self->{_results}->binding_value_by_name($1)->uri_value;
-    $element->{Attributes}->{about}->{Value} = $uri;
+    $element->{Attributes}->{'{}about'}->{Value} = $uri;
     $self->SUPER::start_element($element);
   } elsif ($self->{_element_with_datatype}) {
-    unless ($element->{Attributes}->{'datatype'}) {
+    unless ($element->{Attributes}->{'{}datatype'}) {
       $self->{_element_with_datatype} = undef;
     }
   } elsif ($self->{_is_in_graph}) {
@@ -110,7 +111,7 @@ sub start_element {
 
 sub end_element {
   my ($self, $element) = @_;
-  if ($element->{NamespaceURI} eq $self->{Doc}->{RATURI}) {
+  if (defined($element->{NamespaceURI}) && ($element->{NamespaceURI} eq $self->{Doc}->{RATURI})) {
     if ($element->{LocalName} eq 'graph') {
       # Then, reset everything
       $self->{_currentgraph} = undef;

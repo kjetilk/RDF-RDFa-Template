@@ -73,13 +73,13 @@ foreach my $dir (@subdirs) {
 
   # This stuff needs to be the actual XML generation
   use XML::SAX::Writer;
-  use XML::LibXML::SAX::Generator;
+  use XML::LibXML::SAX::Parser;
 
   my $output;
 
   my $writer = XML::SAX::Writer->new(Output => \$output);
   my $filter = RDF::RDFa::Template::SAXFilter->new(Handler => $writer, Doc => $doc);
-  my $driver = XML::LibXML::SAX::Generator->new(Handler => $filter);
+  my $driver = XML::LibXML::SAX::Parser->new(Handler => $filter);
 
   # generate SAX events that are captured
   # by a SAX Handler or Filter.

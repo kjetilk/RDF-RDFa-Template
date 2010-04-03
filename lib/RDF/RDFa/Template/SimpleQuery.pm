@@ -203,7 +203,7 @@ sub rdfa_xhtml {
   my $self = shift;
   my $builder = XML::LibXML::SAX::Builder->new();
 
-  my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder);
+  my $sax = RDF::RDFa::Template::SAXFilter->new(Handler => $builder, Doc => $self->{DOC});
 
   my $generator = XML::LibXML::SAX::Parser->new(Handler => $sax);
   $generator->generate($self->{DOC}->dom);
