@@ -121,7 +121,9 @@ from this operation can be found by saying $builder->result;
 =head1 METHODS
 
 =head2 C<new>
+
 =head2 C<start_element>
+
 =head2 C<end_element>
 
 This is a SAX Filter implementation and so implements these methods,
