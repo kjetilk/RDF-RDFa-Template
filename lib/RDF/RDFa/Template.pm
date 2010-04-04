@@ -26,7 +26,47 @@ builds something that you can use to run queries.
 =head1 METHODS
 
 This package is just a placeholder for now, other packages in this
-distribution contains the actual code.
+distribution contains the actual code. See the below TODO for the
+status of this module, though.
+
+=head1 TODO
+
+This is an initial release just to enable a meaningful
+discussion. Thus, there are many remaining tasks before this is a
+fully functional templating system. This lists some of the most severe
+things that need to be addressed:
+
+=over
+
+=item * Support for queries with multiple solutions is essential, but
+not yet implemented.
+
+=item * Multiple queries in a single template is not tested.
+
+=item * Prefixes are hardcoded. In the finished system, the XML
+namespace prefixes must not be hardcoded, but namespace URIs must be
+used instead. This is not there yet. Thus, you need to use C<rat> and
+C<sub> like in the examples.
+
+=item * The attribute that sets the graph name is hardcoded to
+C<g:graph> or C<{http://example.org/graph#}graph>. This will be up to
+the author to select and pass as C<doc_graph> for each unit. Thus,
+this must change.
+
+=item * The RDF objects are checked for variables, which is contained
+in XML Literals. Only the first child is used, this may not be
+reliable.
+
+=item * DTD information is not prefixed to the result document.
+
+=item * The system doesn't follow OOP best practices in many places,
+as instance variables are accessed directly rather than using
+methods. Pretty nasty, it is, but it will be corrected.
+
+=item * Consider using just one namespace.
+
+=back
+
 
 =head1 AUTHOR
 
@@ -34,7 +74,7 @@ Kjetil Kjernsmo, C<< <kjetilk at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-rdf-rdfa-template
+Please report any bugs not already on the TODO list to C<bug-rdf-rdfa-template
 at rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template>.
 I will be notified, and then you'll automatically be notified of
@@ -48,6 +88,10 @@ progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc RDF::RDFa::Template
+
+To discuss further directions for this module, please use the Perl/RDF mailing list at
+L<http://lists.perlrdf.org/listinfo/dev>.
+
 
 
 You can also look for information at:
