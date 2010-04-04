@@ -14,7 +14,7 @@ my:project
     a           :Project ;
     :name       "RDF-RDFa-Template" ;
     :shortdesc  "A simple RDFa-like templating language"@en ;
-    :created    "2010-03-14"^^xsd:date ;
+    :created    "2009-01-13"^^xsd:date ;
     :programming-language "Perl" ;
     :maintainer <http://www.kjetil.kjernsmo.net/foaf#me> ;
     :repository <http://svn.kjernsmo.net/RDF-RDFa-Template/> ;
