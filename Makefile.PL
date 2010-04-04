@@ -15,7 +15,7 @@ requires 'XML::SAX::Base';
 requires 'XML::LibXML::SAX::Builder';
 requires 'XML::LibXML::SAX::Parser';
 requires 'File::Util';
-
+requires 'HTTP::Server::Simple::CGI'; # Not actually required, but wanted by the example script
 
 test_requires 'Test::More' => 0.88;
 test_requires 'Test::Exception';
