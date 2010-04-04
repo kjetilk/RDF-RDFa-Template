@@ -172,7 +172,6 @@ sub execute {
 #  die Dumper($doc->units);
   foreach my $unit ($self->{DOC}->units) {
     my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
-    warn $query;
     my $model = $self->{MODEL};
     my $client;
     if ($unit->endpoint) {
