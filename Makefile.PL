@@ -29,7 +29,7 @@ auto_set_repository;
 auto_set_bugtracker;
 
 homepage 'http://www.kjetil.kjernsmo.net/software/rat/';
-write_doap_changes;
+write_doap_changes "web/doap.ttl", "Changes", "turtle";
 
 
 sign;

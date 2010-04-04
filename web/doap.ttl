@@ -31,5 +31,6 @@ my:project
 
 my:v_0_01
     a           :Version ;
-    dc:issued   "2010-03-20"^^xsd:date ;
+    dc:issued   "2010-04-04"^^xsd:date ;
+    dc:description "Initial release, mainly for discussion purposes"@en ;
     :revision   "0.01"^^xsd:string .
