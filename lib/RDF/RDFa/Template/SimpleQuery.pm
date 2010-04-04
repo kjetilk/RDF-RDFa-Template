@@ -172,6 +172,7 @@ sub execute {
 #  die Dumper($doc->units);
   foreach my $unit ($self->{DOC}->units) {
     my $query = 'SELECT * WHERE { ' . $unit->pattern->as_sparql . ' }';
+    warn $query;
     my $model = $self->{MODEL};
     my $client;
     if ($unit->endpoint) {
@@ -180,7 +181,7 @@ sub execute {
     } elsif ($self->{MODEL} && ($self->{MODEL}->isa('RDF::Trine::Model'))) {
       $client = RDF::Query->new($query);
     } else {
-      croak "Need either an endpoint or an RDF::Query::Model";
+      croak "Need either an endpoint or an RDF::Trine::Model";
     }
     my $iterator = $client->execute( $model );
 
