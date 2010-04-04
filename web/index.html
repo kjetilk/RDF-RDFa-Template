@@ -18,8 +18,11 @@
 <p>
 This is at present a braindump of an idea I had to extend RDFa to use
 as a templating language for building web pages. It is not by any
-means finished or implemented, but it is a starting point for further
-discussion as to how such a thing should work.
+means finished but does have a partial implementation in the Perl
+distribution <a
+href="http://search.cpan.org/dist/RDF-RDFa-Template/">RDF::RDFa::Template</a>. First
+and foremost, this document and the module serves as a starting point
+for further discussion.
 </p>
 
 <h2>Introduction</h2>
@@ -39,22 +42,25 @@ We note that RDF and RDFa alike can contain an <a
 href="http://www.w3.org/TR/rdf-concepts/#dfn-rdf-XMLLiteral">XML
 Literal</a>, which is a balanced XML fragment. This makes it possibly
 to legally encode XML fragments into the RDF model, that can represent
-e.g. variables. Thus, by parsing the XHTML, the RDF model can be
+e.g. variables. Thus, by parsing the XHTML, an RDF Model can be
 built. By parsing any XML Literals of a specified namespace, special
 constructs, such as <a
 href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> variables,
-can be found.  There is therefore a design goal of RDFa Templates that
-it should be parseable with standard XML, RDFa and RDF tools with very
-few extensions.
+can be found, thus creating a Basic Graph Pattern.  There is therefore
+a design goal of RDFa Templates that it should be parseable with
+standard XML, RDFa and RDF tools with very few extensions. It is not a
+goal to make the templating language be RDFa, it is more important
+that template writers feel at home with current their HTML/XML-centric
+world.
 </p>
 <p>
 Additionally, the document will be divided into parts by wrapping the
-part in a <code>graph</code> element. Each section is an RDF graph,
-which is identified by a <code><a
-href="http://www.w3.org/TR/xml-id/">xml:id</a></code>
-attribute. Configuration information can be supplied as attributes to
-the <code>graph</code> element. A processor will also use the
-<code>xml:id</code> attribute to name this graph.
+part in a <code>graph</code> element. Each section is an RDF graph and
+it is <a href="http://buzzword.org.uk/2009/rdfa4/spec">planned</a>
+that the author will have different ways to name this graph, but in
+the example implementation it is very limited, see
+below. Configuration information can be supplied as attributes to the
+<code>graph</code> element.
  
 </p>
 <p>
@@ -86,19 +92,24 @@ extended XHTML+RDFa document:
 <pre>
 &lt;?xml version="1.0"?>
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:g="http://example.org/graph#"
       xmlns:rat="http://www.kjetil.kjernsmo.net/software/rat/xmlns"
       xmlns:sub="http://www.kjetil.kjernsmo.net/software/rat/substitutions#"
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:dbp="http://dbpedia.org/property/"
       rat:doctype-public="-//W3C//DTD XHTML+RDFa 1.0//EN"
       rat:doctype-system="http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
       xml:lang="en">
   &lt;head>
+    &lt;title>Range of a Cessna Citation Mustang&lt;/title>
   &lt;/head>
   &lt;body>
-    &lt;rat:graph xml:id="query1" endpoint="http://dbpedia.org/sparql">
+    &lt;h1>Range of a Cessna Citation Mustang&lt;/h1>
+    &lt;rat:graph g:graph="query1" endpoint="http://dbpedia.org/sparql">
       &lt;div about="sub:resource">
-	&lt;div property="rdfs:label">Resource Description Framework&lt;/div>
-	&lt;div property="rdfs:comment" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:comment"/>&lt;/div>
+	&lt;div property="rdfs:label">Cessna Citation Mustang&lt;/div>
+	&lt;div property="dbp:rangeAlt" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:range"/>&lt;/div>
       &lt;/div>
     &lt;/rat:graph>
   &lt;/body>
@@ -114,8 +125,8 @@ for use by RDFa Templates: Here, the namespace assigned to the
 used inline in the XHTML document, whereas <code>sub:</code> is used
 to prefix the document author's variables, so that each variable is
 denoted by a URI. It has also two attributes to set the document type
-of the result document. The <code>head</code> element is irrelevant to
-the example and therefore left empty for brevity.
+of the result document. In the current implementation, these prefixes
+are hardcoded in the code, but this will change in upcoming releases.
 </p>
 
 <p>
@@ -127,12 +138,16 @@ backend.
 </p>
 
 <p>
-The <code>xml:id</code> attribute causes a named graph to be created,
+The <code>g:graph</code> attribute causes a named graph to be created,
 using the base URI of the document and the attribute content as a
 fragment identifier. All triples that has a predicate within this
 element will be added to this graph. It is important to understand the
 the named graph is used to refer to the graph in the context of the
-document, but it is not necessarily used in any generated SPARQL query.
+document, but it is not necessarily used in any generated SPARQL
+query. In the current implementation, the namespace URI and qname of
+this attribute is hardcoded, so it must be used in any experiments,
+but this will change in a full implementation of the ideas in this
+document.
 </p>
 <p>
 The element then has an optional <code>endpoint</code> attribute,
@@ -148,16 +163,14 @@ me the URI and the <code>rdfs:comment</code> where the
 Specifically, this SPARQL query will be generated:
 </p>
 <pre>
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#>
-
-SELECT ?resource ?comment 
-WHERE {
-	?resource rdfs:label "Resource Description Framework"@en ;
-		  rdfs:comment ?comment . 
+SELECT * WHERE { 
+  ?resource &lt;http://dbpedia.org/property/rangeAlt> ?range .
+  ?resource &lt;http://www.w3.org/2000/01/rdf-schema#label> "Cessna Citation Mustang"@en . 
 }
+
 </pre>
 
-<p>
+<!-- p>
 Lets look more carefully into what happened here: First, the namespace
 declarations of the original document were added to the query, except
 the XHTML namespace and the two RDFa Template-specific namespaces,
@@ -165,9 +178,9 @@ since they are known to not influence the generation of the
 query. Then, the two variables declared in the
 <code>sub:</code>-prefixed namespace were added to the SELECT
 clause. 
-</p>
+</p -->
 <p>
-Then, we note that in the original file "<code>sub:resource</code>"
+We note that in the original file "<code>sub:resource</code>"
 was the subject set by the <code>about</code> attribute, and this has
 resulted in the <code>?resource</code> variable being the subject in
 the SPARQL WHERE clause. The two <code>property</code> attributes sets
@@ -207,7 +220,7 @@ iterate over all query solutions. Consider this example:
     &lt;h1>Aircraft produced in 1973&lt;/h1>
     &lt;table>
       &lt;tr>&lt;th>Name&lt;/th>&lt;th>Produced&lt;/th>&lt;th>First flight&lt;/th>&lt;/tr>
-      &lt;rat:graph xml:id="query2" endpoint="http://dbpedia.org/sparql">
+      &lt;rat:graph g:graph="query2" endpoint="http://dbpedia.org/sparql">
 	&lt;tr about="sub:resource">
 	  &lt;td property="foaf:name" datatype="rdf:XMLLiteral">&lt;rat:variable name="sub:name"/>&lt;/td>
 	  &lt;td property="dbo:produced">1973&lt;/td>
@@ -257,10 +270,13 @@ following XHTML+RDFa:
 </pre>
 
 <p>
+This is not implemented yet and the query in this example does not
+anymore return any results.
+</p>
+<p>
 We saw that by having an invariant property <code>dbo:produced</code>,
-a <a href="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;should-sponge=&amp;query=PREFIX+foaf%3A+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%3E%0D%0APREFIX+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0APREFIX+dbp%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fproperty%2F%3E%0D%0ASELECT+%3Fresource+%3Fname+%3Ffirst+WHERE+%0D%0A%7B%0D%0A%3Fresource+dbo%3Aproduced+%221973%22+.%0D%0A%3Fresource+foaf%3Aname+%3Fname+.%0D%0A%3Fresource+dbp%3AfirstFlight+%3Ffirst+.%0D%0A%7D&amp;format=text%2Fhtml&amp;debug=on">SPARQL query</a> was generated where this literal resulted in a query
-that would find everything first produced in 1973 (apparently, this
-property is only used for aircraft in DBPedia). The
+a SPARQL query was generated where this literal resulted in a query
+that would find everything first produced in 1973. The
 <code>sub:</code>-prefixed URIs in the input example was used to create
 three variables, <code>?resource</code>, <code>?name</code> and
 <code>?first</code>, which was used to populate the template.
@@ -300,11 +316,18 @@ this prefix, yet retain portability should be found.
 </p>
 
 <h2>TODO</h2>
+
+<p>
+This is an early draft, and there are a number of issues with this
+draft, as well as the implementation. The TODO list for the software
+is in the distribution, this is a list of issues with this document:
+</p>
+
 <ul>
 <li>Resolve weaknesses, or decide that they are really not
 important.</li>
 <li>How will URIs appear in objects?</li>
-<li>How to use FILTERs?</li>
+<li>How to use FILTERs? (use XSPARQL?)</li>
 <li>How to use freetext index matching?</li>
 <li>How to create SPARQL UNIONs and OPTIONALs?</li>
 <li>Other ways to assign graph names?</li>
@@ -317,6 +340,8 @@ important.</li>
 First and foremost a thank-you to Toby Inkster for writing the <a
 href="http://search.cpan.org/dist/RDF-RDFa-Parser/">RDF::RDFa::Parser</a>,
 and for several suggestions in the early thinking around this idea.
+
+
 </p>
 
 </body>
