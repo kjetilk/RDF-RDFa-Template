@@ -114,9 +114,8 @@ sub results {
     } else {
       croak "Argument is not a RDF::Trine::Iterator";
     }
-  } else {
-    return $self->{ITERATOR};
   }
+  return $self->{ITERATOR};
 }
 
 

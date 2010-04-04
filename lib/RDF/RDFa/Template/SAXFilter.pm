@@ -16,8 +16,7 @@ use Data::Dumper;
 use Carp;
 
 sub new {
-    my $class = shift;
-    my %options = @_;
+    my ($class, %options) = @_;
     $options{BaseURI} ||= './';	    
     $options{_is_in_graph} = 0;
     $options{_currentgraph} = undef;
@@ -89,7 +88,7 @@ sub start_element {
   } else {
     $self->SUPER::start_element($element);
   }
-#  warn Dumper($element);
+  return $self;
 }
 
 sub end_element {
@@ -104,6 +103,7 @@ sub end_element {
   } else {
     $self->SUPER::end_element($element);
   }
+  return $self;
 }
 
 =head1 SYNOPSIS
