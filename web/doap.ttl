@@ -6,14 +6,14 @@
 
 
 <>
-    dc:title     "DOAP for RDF-RDFa-Template" ;
+    dc:title     "DOAP for RDF-RDFa-Template"@en ;
     dc:subject   my:project ;
     dc:creator   <http://www.kjetil.kjernsmo.net/foaf#me> .
 
 my:project	 
     a           :Project ;
     :name       "RDF-RDFa-Template" ;
-    :shortdesc  "A simple RDFa-like templating language" ;
+    :shortdesc  "A simple RDFa-like templating language"@en ;
     :created    "2010-03-14"^^xsd:date ;
     :programming-language "Perl" ;
     :maintainer <http://www.kjetil.kjernsmo.net/foaf#me> ;
