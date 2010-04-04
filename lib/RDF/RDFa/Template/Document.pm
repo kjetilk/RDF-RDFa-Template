@@ -125,7 +125,7 @@ sub extract {
     $units{$graph} = RDF::RDFa::Template::Unit->new(
 			      triples => \@triples,
 			      endpoint => $endpoint,
-			      doc_graph	=> $graph);
+			      doc_graph => $graph);
     $self->{UNITS} = \%units;
   }
   return $return;

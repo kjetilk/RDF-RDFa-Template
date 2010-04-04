@@ -17,7 +17,7 @@ use Carp;
 
 sub new {
     my ($class, %options) = @_;
-    $options{BaseURI} ||= './';	    
+    $options{BaseURI} ||= './';
     $options{_is_in_graph} = 0;
     $options{_currentgraph} = undef;
     return bless \%options, $class;
@@ -47,7 +47,7 @@ sub start_element {
       if (defined($self->{_currentgraph})) {
 	$self->{_is_in_graph} = 1;
       }
-      die "couldn't find current graph name" unless $self->{_currentgraph};
+      croak "couldn't find current graph name" unless $self->{_currentgraph};
       $self->{_results} = $self->{Doc}->unit($self->{Doc}->{PARSED}->uri . $self->{_currentgraph})->results; # TODO: PARSED method
     } elsif ($element->{LocalName} eq 'variable') {
       delete $self->{_element_with_datatype}->{Attributes}->{'{}datatype'};
