@@ -1,0 +1,23 @@
+README for RDF-RDFa-Template
+----------------------------
+
+This module is the beginning of a suggested simple RDFa-like
+templating language. It is not intended to be RDFa, it is intended to
+give template writers something that they are familiar with from the
+XML world, yet they can use an largely unmodified XML-based
+RDFa-parser to do the parsing. In this case, RDF::RDFa::Parser is
+used.
+
+For more information about the design of this templating language, see 
+
+  http://www.kjetil.kjernsmo.net/software/rat/
+
+BEWARE OF TODO-LIST:
+
+This is an initial release just to enable a meaningful
+discussion. Thus, there are many remaining tasks before this is a
+fully functional templating system. If you start experimenting with
+writing templates based on this module, it is important that you read
+the TODO list in the POD of RDF::RDFa::Template.
+
+RUNNING EXAMPLES:
