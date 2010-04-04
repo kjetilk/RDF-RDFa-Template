@@ -3,6 +3,7 @@
   package RATDemoServer;
   
   use HTTP::Server::Simple::CGI;
+  use RDF::RDFa::Template::SimpleQuery;
   use File::Util;
   use base qw(HTTP::Server::Simple::CGI);
   
@@ -17,7 +18,12 @@
     if (-f ".$path") {
       print "HTTP/1.0 200 OK\r\n";
       print "Content-Type: text/html\n\n";
-      print $f->load_file(".$path");
+      my ($rat) = $f->load_file(".$path");
+      my $query = RDF::RDFa::Template::SimpleQuery->new(rat => $rat, baseuri => 'http://localhost:8080/' );
+      $query->execute;
+      my $output = $query->rdfa_xhtml;
+
+      print $output->toStringC14N;
     } else {
       print "HTTP/1.0 404 Not found\r\n";
       print $cgi->header,
