@@ -5,7 +5,7 @@ all_from 'lib/RDF/RDFa/Template.pm';
 author   'Kjetil Kjernsmo <kjetilk@cpan.org>';
 license  'perl';
 
-requires 'RDF::RDFa::Parser' => 0.21;
+requires 'RDF::RDFa::Parser' => 1.0;
 requires 'RDF::Trine' => 0.114;
 requires 'RDF::Trine::Node::Literal::XML';
 requires 'RDF::Query' => 2.0;

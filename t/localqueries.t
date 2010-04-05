@@ -28,9 +28,14 @@ foreach my $dir (@subdirs) {
 
   is_well_formed_xml($rat, "Input RDFa Template document in $dir is well-formed");
 
-  my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/foo/', {use_rtnlx => 1});
+  my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/foo/', 
+				      {
+				       use_rtnlx => 1,
+				       graph => 1,
+				       graph_type => 'about',
+				       graph_attr => '{http://example.org/graph#}graph',
+				      });
 
-  $parser->named_graphs('http://example.org/graph#', 'graph'); # Set how to find graph names
   ok($parser->consume, "The actual parsing went OK");
   my $doc = RDF::RDFa::Template::Document->new($parser);
   ok($doc->extract, "Extract the RDF graphs from the RDFa Template");

@@ -162,8 +162,13 @@ does happen. Returns the number of queries generated.
 
 sub execute {
   my $self = shift;
-  my $parser = RDF::RDFa::Parser->new($self->{RAT}, 'http://example.org/foo/', {use_rtnlx => 1});
-  $parser->named_graphs('http://example.org/graph#', 'graph');
+  my $parser = RDF::RDFa::Parser->new($self->{RAT}, 'http://example.org/foo/', 
+				      {
+				       use_rtnlx => 1,
+				       graph => 1,
+				       graph_type => 'about',
+				       graph_attr => '{http://example.org/graph#}graph',
+				      });
   $parser->consume;
   $self->{DOC} = RDF::RDFa::Template::Document->new($parser);
   $self->{DOC}->extract;

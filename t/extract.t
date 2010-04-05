@@ -22,10 +22,15 @@ use_ok('RDF::Trine::Store');
 ok(defined($rat), "Got data");
 
 
-my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/dbpedia-comment/', {use_rtnlx => 1});
-isa_ok($parser, 'RDF::RDFa::Parser');
+my $parser = RDF::RDFa::Parser->new($rat, 'http://example.org/dbpedia-comment/', 
+				    {
+				     use_rtnlx => 1,
+				     graph => 1,
+				     graph_type => 'about',
+				     graph_attr => '{http://example.org/graph#}graph',
+				    });
 
-ok($parser->named_graphs('http://example.org/graph#', 'graph'), "Graph named");
+isa_ok($parser, 'RDF::RDFa::Parser');
 
 ok($parser->consume, "Graph consumed");
 
