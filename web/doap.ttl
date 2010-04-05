@@ -3,6 +3,7 @@
 @prefix my:   <http://www.kjetil.kjernsmo.net/software/rat/doap#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 
 
 <>
@@ -20,7 +21,8 @@ my:project
     :repository <http://svn.kjernsmo.net/RDF-RDFa-Template/> ;
     :homepage   <http://www.kjetil.kjernsmo.net/software/rat/> ;
     :bug-database <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template> ;
-    :release    my:v_0_01 .
+    :release    my:v_0_01 ;
+    :release    my:v_0_02 .
 
 <http://www.kjetil.kjernsmo.net/foaf#me>
     a           foaf:Person ;
@@ -34,3 +36,18 @@ my:v_0_01
     dc:issued   "2010-04-04"^^xsd:date ;
     dc:description "Initial release, mainly for discussion purposes"@en ;
     :revision   "0.01"^^xsd:string .
+
+my:v_0_02      
+    a           :Version ;
+    dc:issued   "2010-04-05"^^xsd:date ;
+    :revision   "0.02"^^xsd:string ;
+    rdfs:label  "Fixing packaging and update to latest parser" ; 
+    dcs:changeset [
+      dcs:item
+        [ rdfs:label "Remove named_graphs since it is deprecated by RDF::RDFa::Parser 1.0."@en ] ,
+        [ rdfs:label "Forgot 'tests' om external test plan." ; a dcs:Bugfix ] ,
+        [ rdfs:label "Add Test::Perl::Critic." ; a dcs:Addition ] ,
+        [ rdfs:label "Depend upon RDF::RDFa::Parser 1.0." ; a dcs:Addition ] ,
+        [ rdfs:label "Minor Perl::Critic stuff." ; a dcs:Bugfix ] ,
+        [ rdfs:label "Add HTTP::Server::Simple::CGI requirement for now." ; a dcs:Addition ] ,
+    ] .
