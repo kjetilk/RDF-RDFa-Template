@@ -5,7 +5,7 @@ unless ($ENV{NETWORK_TESTS}) {
   plan skip_all => 'Set $ENV{NETWORK_TESTS} to enable tests against external SPARQL endpoints';
 }
 else {
-  plan => 9;
+  plan tests => 9;
 }
 
 use Test::XML;
