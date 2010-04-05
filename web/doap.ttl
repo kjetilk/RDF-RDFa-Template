@@ -50,5 +50,6 @@ my:v_0_02
         [ rdfs:label "Add Test::Perl::Critic."@en ; a dcs:Addition ] ,
         [ rdfs:label "Depend upon RDF::RDFa::Parser 1.0."@en ; a dcs:Addition ] ,
         [ rdfs:label "Minor Perl::Critic stuff."@en ; a dcs:Bugfix ] ,
-        [ rdfs:label "Add HTTP::Server::Simple::CGI requirement for now."@en ; a dcs:Addition ] 
+        [ rdfs:label "Add HTTP::Server::Simple::CGI requirement for now."@en ; a dcs:Addition ] ,
+	[ rdfs:label "Remove auto_install"@en ; a dcs:Removal ]	
     ] .

@@ -34,9 +34,6 @@ write_doap_changes "web/doap.ttl", "Changes", "turtle";
 
 sign;
 
-auto_install;
-
-
 
 WriteAll;
 
