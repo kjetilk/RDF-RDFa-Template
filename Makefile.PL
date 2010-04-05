@@ -21,7 +21,6 @@ test_requires 'Test::More' => 0.88;
 test_requires 'Test::Exception';
 test_requires 'Test::XML';
 test_requires 'XML::LibXML::XPathContext';
-test_requires 'Test::Perl::Critic';
 
 include 'Test::Signature';
 
