@@ -23,7 +23,8 @@ my:project
     :homepage   <http://www.kjetil.kjernsmo.net/software/rat/> ;
     :bug-database <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template> ;
     :release    my:v_0_01 ;
-    :release    my:v_0_02 .
+    :release    my:v_0_02 ;
+    :release    my:v_0_03 .
 
 <http://www.kjetil.kjernsmo.net/foaf#me>
     a           foaf:Person ;
@@ -52,4 +53,15 @@ my:v_0_02
         [ rdfs:label "Minor Perl::Critic stuff."@en ; a dcs:Bugfix ] ,
         [ rdfs:label "Add HTTP::Server::Simple::CGI requirement for now."@en ; a dcs:Addition ] ,
 	[ rdfs:label "Remove auto_install"@en ; a dcs:Removal ]	
+    ] .
+
+my:v_0_03      
+    a           :Version ;
+    dc:issued   "2010-04-06"^^xsd:date ;
+    :revision   "0.03"^^xsd:string ;
+    rdfs:label  "Use author tests"@en ; 
+    dcs:changeset [
+      dcs:item
+        [ rdfs:label "Forgot named_graph in Document POD."@en ; a dcs:Bugfix ] ,
+        [ rdfs:label "Move the Test::Signature and Perl::Critic tests to xt/."@en ; a dcs:Bugfix ] 
     ] .
