@@ -13,3 +13,4 @@ tar.gz$
 /.svn/
 .patch$
 ^svn-ignores$
+^RDF-RDFa-Template-

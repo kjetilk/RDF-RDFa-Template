@@ -24,7 +24,7 @@ my:project
     :bug-database <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template> ;
     :release    my:v_0_01 ;
     :release    my:v_0_02 ;
-    :release    my:v_0_03 .
+    :release    my:v_0_04 .
 
 <http://www.kjetil.kjernsmo.net/foaf#me>
     a           foaf:Person ;
@@ -55,10 +55,10 @@ my:v_0_02
 	[ rdfs:label "Remove auto_install"@en ; a dcs:Removal ]	
     ] .
 
-my:v_0_03      
+my:v_0_04      
     a           :Version ;
     dc:issued   "2010-04-06"^^xsd:date ;
-    :revision   "0.03"^^xsd:string ;
+    :revision   "0.04"^^xsd:string ;
     rdfs:label  "Use author tests"@en ; 
     dcs:changeset [
       dcs:item
