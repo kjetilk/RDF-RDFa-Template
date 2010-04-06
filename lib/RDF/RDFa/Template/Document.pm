@@ -32,8 +32,13 @@ sub new {
 
 =head1 SYNOPSIS
 
-  my $parser = RDF::RDFa::Parser->new($xhtml, 'http://example.org/foo/', {use_rtnlx => 1});
-  $parser->named_graphs('http://example.org/graph#', 'graph');
+  my $parser = RDF::RDFa::Parser->new($self->{RAT}, 'http://example.org/foo/', 
+				      {
+				       use_rtnlx => 1,
+				       graph => 1,
+				       graph_type => 'about',
+				       graph_attr => '{http://example.org/graph#}graph',
+				      });
   $parser->consume;
   my $doc = RDF::RDFa::Template::Document->($parser);
   $doc->extract;
