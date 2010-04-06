@@ -3,7 +3,7 @@ package RDF::RDFa::Template;
 use warnings;
 use strict;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 NAME
@@ -12,7 +12,7 @@ RDF::RDFa::Template - A simple templating system using RDFa to build RDF data vi
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 DESCRIPTION
 
