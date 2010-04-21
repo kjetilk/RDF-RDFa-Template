@@ -20,4 +20,9 @@ fully functional templating system. If you start experimenting with
 writing templates based on this module, it is important that you read
 the TODO list in the POD of RDF::RDFa::Template.
 
+The proper forum for discussing implementation details of this module
+is this mailing list:
+ http://lists.perlrdf.org/listinfo/dev
+or the IRC channel irc://irc.perl.org#perlrdf
+
 RUNNING EXAMPLES:
