@@ -12,7 +12,7 @@ RDF::RDFa::Template - A simple templating system using RDFa to build RDF data vi
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =head1 DESCRIPTION
 
@@ -66,6 +66,16 @@ methods. Pretty nasty, it is, but it will be corrected.
 =item * Consider using just one namespace.
 
 =back
+
+=head1 EXAMPLE SCRIPT
+
+There is a simple web server script in the C<examples/> directory of
+this distribution. This sets up a web server on your machine that can
+do the template transform. Any template files in the directory can be
+visited with a browser, e.g.
+
+  http://localhost:8080/dbpedia-mustang-range.input.xhtml
+
 
 
 =head1 AUTHOR
