@@ -65,7 +65,7 @@ sub start_element {
       if ($binding->has_datatype) {
 	$attrs{'{}datatype'} = { 'LocalName' => 'datatype',
                                'Prefix' => '',
-                               'Value' => $binding->literal_value_datatype,
+                               'Value' => $binding->literal_datatype,
                                'Name' => 'datatype',
                                'NamespaceURI' => undef
 			     }
