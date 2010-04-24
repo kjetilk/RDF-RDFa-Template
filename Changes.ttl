@@ -1,6 +1,6 @@
 @prefix :     <http://usefulinc.com/ns/doap#> .
 @prefix dc:   <http://purl.org/dc/terms/> .
-@prefix my:   <http://www.kjetil.kjernsmo.net/software/rat/doap#> .
+@prefix my:   <http://purl.org/NET/cpan-uri/dist/RDF-RDFa-Template/> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dcs:  <http://ontologi.es/doap-changeset#> .
@@ -16,7 +16,6 @@ my:project
     a           :Project ;
     :name       "RDF-RDFa-Template" ;
     :shortdesc  "A simple RDFa-like templating language"@en ;
-    owl:sameAs  <http://purl.org/NET/cpan-uri/dist/RDF-RDFa-Template/project> ;
     :created    "2009-01-13"^^xsd:date ;
     :programming-language "Perl" ;
     :maintainer <http://www.kjetil.kjernsmo.net/foaf#me> ;
@@ -25,7 +24,8 @@ my:project
     :bug-database <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RDF-RDFa-Template> ;
     :release    my:v_0_01 ;
     :release    my:v_0_02 ;
-    :release    my:v_0_04 .
+    :release    my:v_0_04 ;
+    :release    my:v_0_05 .
 
 <http://www.kjetil.kjernsmo.net/foaf#me>
     a           foaf:Person ;
@@ -66,4 +66,18 @@ my:v_0_04
       dcs:item
         [ rdfs:label "Forgot named_graph in Document POD."@en ; a dcs:Bugfix ] ,
         [ rdfs:label "Move the Test::Signature and Perl::Critic tests to xt/."@en ; a dcs:Bugfix ] 
+    ] .
+
+my:v_0_05      
+    a           :Version ;
+    dc:issued   "2010-04-22"^^xsd:date ;
+    :revision   "0.05"^^xsd:string ;
+    rdfs:label  "Add more documentation; bugfixes"@en ; 
+    dcs:changeset [
+      dcs:item
+        [ rdfs:label "Add something about finding the example script."@en ; a dcs:Addition ] ,
+        [ rdfs:label "Smaller README changes."@en ; a dcs:Addition ] ,
+        [ rdfs:label "DBPedia has updated ontology on units."@en ; a dcs:Bugfix ] ,
+        [ rdfs:label "It is literal_datatype, not literal_value_datatype."@en ; a dcs:Bugfix ] ,
+        [ rdfs:label "Move the doap.ttl back"@en ] 
     ] .
