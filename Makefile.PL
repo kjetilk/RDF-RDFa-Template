@@ -24,9 +24,9 @@ test_requires 'XML::LibXML::XPathContext';
 
 include 'Test::Signature';
 
-auto_set_repository;
 auto_set_bugtracker;
 
+repository 'http://svn.kjernsmo.net/RDF-RDFa-Template/';
 homepage 'http://www.kjetil.kjernsmo.net/software/rat/';
 write_doap_changes;
 
