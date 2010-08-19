@@ -24,6 +24,8 @@ test_requires 'XML::LibXML::XPathContext';
 
 include 'Test::Signature';
 
+author_tests('xt');
+
 auto_set_bugtracker;
 
 repository 'http://svn.kjernsmo.net/RDF-RDFa-Template/';
