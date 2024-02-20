@@ -65,3 +65,13 @@ http://localhost:8080/dbpedia-mustang-range.input.xhtml
 
 The demoserver.pl script itself is a nice illustration on how to set
 up a server to use the templating system.
+
+RELATED WORK:
+
+Callimachus had many of the same ideas as this project:
+
+https://www.w3.org/2001/sw/wiki/Callimachus
+
+I don't know if that effort had long-term sustainability either, 
+but if this module is interesting, then efforts would probably be better spent there.
+
